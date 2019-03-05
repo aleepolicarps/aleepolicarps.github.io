@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I. The Basics</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="hello-world">Hello World!</h1>
+<h2 id="i.-through-the-command-line">I. Through the command line</h2>
+<h3 id="check-the-python-version-installed.">Check the python version installed.</h3>
+<ol>
+<li>Open the CMD and check the version of Python installed by typing <code>python -v</code> or <code>python --version</code></li>
+<li>If you can see that the Python version is 2, install Python 3.7</li>
+<li>Type in <code>python</code></li>
+<li>You will see the Python Interactive Shell</li>
+</ol>
+<pre class=" language-shell"><code class="prism  language-shell">Python 3.7.2 (default, Feb 12 2019, 08:15:36)
+[Clang 10.0.0 (clang-1000.11.45.5)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt;
+</code></pre>
+<ol start="5">
+<li>Type <code>print('Hello, world!')</code></li>
+</ol>
+<h2 id="ii.-using-a-text-editor">II. Using a Text Editor</h2>
+<ol>
+<li>Launch IDLE</li>
+<li>File -&gt; New File</li>
+<li>Type the following on the window with title <code>Untitled</code></li>
+<li>Type <code>print('Hello, world!')</code></li>
+<li>Save the file and name it <code>hello_world.py</code></li>
+<li>Press F5 to run the code</li>
+</ol>
+<h1 id="more-to-python">More to Python</h1>
+<p>Copy the following code and run</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> datetime <span class="token keyword">import</span> datetime
+
+odds <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span>  <span class="token number">3</span><span class="token punctuation">,</span>  <span class="token number">5</span><span class="token punctuation">,</span>  <span class="token number">7</span><span class="token punctuation">,</span>  <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span>
+        <span class="token number">21</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token number">27</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">,</span> <span class="token number">31</span><span class="token punctuation">,</span> <span class="token number">33</span><span class="token punctuation">,</span> <span class="token number">35</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">,</span> <span class="token number">39</span><span class="token punctuation">,</span>
+        <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">43</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">,</span> <span class="token number">47</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">,</span> <span class="token number">51</span><span class="token punctuation">,</span> <span class="token number">53</span><span class="token punctuation">,</span> <span class="token number">55</span><span class="token punctuation">,</span> <span class="token number">57</span><span class="token punctuation">,</span> <span class="token number">59</span> <span class="token punctuation">]</span>
+
+right_this_minute <span class="token operator">=</span> datetime<span class="token punctuation">.</span>today<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>minute
+
+<span class="token keyword">if</span> right_this_minute <span class="token keyword">in</span> odds<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"This minute seems a little odd."</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Not an odd minute."</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="python-interpreter">Python Interpreter</h2>
+<p>Unlike other programming languages like C, C++ or Java, Python Interpreter does not produce an “executable” file then runs the executable file. Rather, it runs the code directly.</p>
+<h2 id="modules">Modules</h2>
+<p>A module is a file containing Python definitions and statements and a collection of these modules are called packages. Python is shipped with multiple useful modules and packages, you just need to learn how to use it. For example, for the code above, we need the module <code>datetime</code> which is a part of the <code>datetime</code> package.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> datetime <span class="token keyword">import</span> datetime
+</code></pre>
+<p>Here, we need to use the function <code>getcwd</code> so we first import it from the module <code>os</code></p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> os <span class="token keyword">import</span> getcwd
+</code></pre>
+<h2 id="variables">Variables</h2>
+<p>Unlike other programming language, there’s no command for declaring variables. A variable is created the moment you assign a value to it.</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token number">1</span>
+b <span class="token operator">=</span> <span class="token string">"hello"</span>
+</code></pre>
+<h2 id="datatypes">DataTypes</h2>
+<h3 id="numbers">Numbers</h3>
+<p>Python supports 3 numeric types</p>
+<ul>
+<li>int</li>
+<li>float</li>
+<li>complex (<code>j</code> as imaginary)</li>
+</ul>
+<h3 id="strings">Strings</h3>
+<p>Can be surrounded by single or double quotes</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Hello, world!'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello, world!"</span><span class="token punctuation">)</span>
+</code></pre>
+<h5 id="accessing-characters">Accessing characters</h5>
+<p>You can access a character of an array by its index (0-based)</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token string">'iAcademy'</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment"># will output letter A</span>
+</code></pre>
+<h5 id="substring">Substring</h5>
+<p>You can easily extract a substring of a string by defining the position of start and end (not included)</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token string">'iAcademy'</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment"># will output cad, notice that letter d wasn't included</span>
+</code></pre>
+<h5 id="length">Length</h5>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> 'iAcademy
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#8</span>
+</code></pre>
+<h3 id="casting">Casting</h3>
+<p>You can explicitly define a variable to be of a specific type, <code>int()</code>, <code>float()</code>, <code>string()</code></p>
+<h2 id="operators">Operators</h2>
+<h3 id="logical-operators">Logical Operators</h3>
+
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>and</code></td>
+<td>Returns True if both statements are true</td>
+<td><code>x &lt; 5 and x &lt; 10</code></td>
+</tr>
+<tr>
+<td><code>or</code></td>
+<td>Returns True if one of the statements is true</td>
+<td><code>x &lt; 5 or x &lt; 4</code></td>
+</tr>
+<tr>
+<td><code>not</code></td>
+<td>Reverse the result</td>
+<td><code>not(x &lt; 5 and x &lt; 10)</code></td>
+</tr>
+</tbody>
+</table><hr>
+<h3 id="identity-operators">Identity Operators</h3>
+<p>Identity operators are used to compare objects, not if they are equal, but if they are actually the same object, with the same memory location</p>
+
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is</code></td>
+<td>Returns true if both variables are the same object</td>
+<td><code>x is y</code></td>
+</tr>
+<tr>
+<td><code>is not</code></td>
+<td>Returns true if both variables are not the same object</td>
+<td><code>x is not y</code></td>
+</tr>
+</tbody>
+</table><hr>
+<h3 id="membership-operators">Membership Operators</h3>
+<p>Membership operators are used to test if a sequence is presented in an object</p>
+
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>in</code></td>
+<td>Returns True if a sequence with the specified value is present in the object</td>
+<td><code>x in y</code></td>
+</tr>
+<tr>
+<td><code>not in</code></td>
+<td>Returns True if a sequence with the specified value is not present in the object</td>
+<td><code>x not in y</code></td>
+</tr>
+</tbody>
+</table><h2 id="blocks-or-suite">Blocks or Suite</h2>
+<p><strong>Blocks in Python are easy to spot, as they are always indented</strong>.<br>
+Did you notice that there are no curly braces here?</p>
+<p><strong>What Happened to My Curly Braces?</strong><br>
+Python doesn’t use curly braces for this purpose. Python uses <strong>indentation</strong> to demarcate a block of code, which Python programmers prefer to call <strong>suite</strong> as opposed to <em>block</em></p>
+<h3 id="colon">Colon</h3>
+<p>Tt introduces a new suite of code that <strong>must</strong> be indented to the right.</p>
+<h2 id="if-elif-and-else">If, Elif and Else</h2>
+<p>Python use typical <code>if</code> and <code>else</code> but does not use either <code>elseif</code> or <code>else if</code>. Rather, it uses <code>elif</code></p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> x <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'one'</span><span class="token punctuation">)</span>
+<span class="token keyword">elif</span> x <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'two'</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'not one neither two'</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="loops">Loops</h2>
+<h3 id="while">while</h3>
+<pre class=" language-python"><code class="prism  language-python">i <span class="token operator">=</span> <span class="token number">1</span>  
+<span class="token keyword">while</span> i <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>  
+	i <span class="token operator">+=</span> <span class="token number">1</span>
+</code></pre>
+<p><strong>break statement</strong><br>
+With the break statement we can stop the loop even if the while condition is true</p>
+<pre class=" language-python"><code class="prism  language-python">i <span class="token operator">=</span> <span class="token number">1</span>  
+<span class="token keyword">while</span> i <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>  
+	<span class="token keyword">if</span> i <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">:</span>  
+		<span class="token keyword">break</span>  
+	i <span class="token operator">+=</span> <span class="token number">1</span>
+</code></pre>
+<h3 id="for">for</h3>
+<p>A for loop is used for iterating over a sequence (that is either a list, a tuple, a dictionary, a set, or a string).</p>
+<pre class=" language-python"><code class="prism  language-python">fruits <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">]</span>  
+<span class="token keyword">for</span>  x <span class="token keyword">in</span> fruits<span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>range() Function</strong><br>
+The range() function returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and ends at a specified number.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> x <span class="token keyword">in</span>  <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Defaults to 0 as a starting value, however it is possible to specify the starting value by adding a parameter:<code>range(2, 6)</code>, which means values from 2 to 6 (but not including 6).</li>
+<li>Defaults to increment the sequence by 1, however it is possible to specify the increment value by adding a third parameter: <code>range(2, 30, 3)</code></li>
+<li>You can also negate the step and this will result in a reverse sequence: <code>range(10, 0, -2)</code></li>
+</ul>
+<h2 id="python-collections">Python Collections</h2>
+<ol>
+<li>List</li>
+<li>Tuple</li>
+<li>Set</li>
+<li>Dictionary</li>
+</ol>
+<h3 id="lists">Lists</h3>
+<p>A list is a collection which is ordered and changeable. In Python lists are written with square brackets.</p>
+<pre class=" language-python"><code class="prism  language-python">thislist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">]</span>  
+<span class="token keyword">print</span><span class="token punctuation">(</span>thislist<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>thislist<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment"># apple</span>
+</code></pre>
+<p>You can loop through the list items by using a <code>for</code> loop</p>
+<pre><code>thislist = ["apple", "banana", "cherry"]  
+for x in thislist:  
+print(x)
+</code></pre>
+<p>To determine how many items a list has, use the  <code>len()</code>  method</p>
+<pre class=" language-python"><code class="prism  language-python">thislist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">]</span>  
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>thislist<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>To add an item to the end of the list, use the <code>append()</code> method</p>
+<pre class=" language-python"><code class="prism  language-python">thislist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">]</span>  
+thislist<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">"orange"</span><span class="token punctuation">)</span>  
+</code></pre>
+<p>To add an item at the specified index, use the <code>insert()</code> method</p>
+<pre class=" language-python"><code class="prism  language-python">thislist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">]</span>  
+thislist<span class="token punctuation">.</span>insert<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"orange"</span><span class="token punctuation">)</span>  
+</code></pre>
+<h3 id="tuples">Tuples</h3>
+<p>A tuple is a collection which is ordered and <strong>unchangeable</strong></p>
+<pre class=" language-python"><code class="prism  language-python">thistuple <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">)</span>  
+<span class="token keyword">print</span><span class="token punctuation">(</span>thistuple<span class="token punctuation">)</span>
+</code></pre>
+<p>Once a tuple is created, you cannot add items to it. Tuples are <strong>unchangeable</strong>.</p>
+<h3 id="sets">Sets</h3>
+<p>A set is a collection which is unordered and unindexed</p>
+<pre class=" language-python"><code class="prism  language-python">thisset <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">}</span>  
+<span class="token keyword">print</span><span class="token punctuation">(</span>thisset<span class="token punctuation">)</span>
+</code></pre>
+<p>To add one item to a set use the <code>add()</code> method and to add multiple items to a set, use <code>update()</code></p>
+<pre class=" language-python"><code class="prism  language-python">thisset <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">,</span> <span class="token string">"cherry"</span><span class="token punctuation">}</span>  
+  
+thisset<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token string">"orange"</span><span class="token punctuation">)</span>
+thisset<span class="token punctuation">.</span>update<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"orange"</span><span class="token punctuation">,</span> <span class="token string">"mango"</span><span class="token punctuation">,</span> <span class="token string">"grapes"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="dictionaries">Dictionaries</h3>
+<p>A dictionary is a collection which is unordered, changeable and indexed. In Python dictionaries are written with curly brackets, and they have keys and values.</p>
+<pre class=" language-python"><code class="prism  language-python">thisdict <span class="token operator">=</span>  <span class="token punctuation">{</span>  
+<span class="token string">"brand"</span><span class="token punctuation">:</span> <span class="token string">"Ford"</span><span class="token punctuation">,</span>  
+<span class="token string">"model"</span><span class="token punctuation">:</span> <span class="token string">"Mustang"</span><span class="token punctuation">,</span>  
+<span class="token string">"year"</span><span class="token punctuation">:</span> <span class="token number">1964</span>  
+<span class="token punctuation">}</span>  
+</code></pre>
+<p>You can access the items of a dictionary by referring to its key name, inside square brackets</p>
+<pre class=" language-python"><code class="prism  language-python">x <span class="token operator">=</span> thisdict<span class="token punctuation">[</span><span class="token string">"model"</span><span class="token punctuation">]</span>
+</code></pre>
+<p>Print all <em>values</em> in the dictionary</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> x <span class="token keyword">in</span> thisdict<span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>thisdict<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>or</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> x <span class="token keyword">in</span> thisdict<span class="token punctuation">.</span>values<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+</code></pre>
+<p>Loop through both <em>keys</em> and <em>values</em>, by using the <code>items()</code> function</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> x<span class="token punctuation">,</span> y <span class="token keyword">in</span> thisdict<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  
+	<span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+</code></pre>
+</div>
+</body>
+
+</html>
