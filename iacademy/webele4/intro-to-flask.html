@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I. Intro to Flash</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="introduction-to-flask">Introduction to Flask</h1>
+<p>A Python micro web framework which aims to keep the core simple but extensible.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Create a folder and name it <code>my-flask-app</code></li>
+<li>Inside the folder create a file named <code>Dockerfile</code> and copy the following</li>
+</ol>
+<pre><code>FROM python:3.4-alpine
+ADD . /code
+WORKDIR /code
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+</code></pre>
+<ol start="3">
+<li>Create another file named <code>docker-compose.yml</code> and copy the following</li>
+</ol>
+<pre><code>version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "5000:5000"
+    volumes:
+     - .:/code
+
+</code></pre>
+<ol start="4">
+<li>Creata a file named <code>requirements.txt</code> and copy the following</li>
+</ol>
+<pre><code>flask
+
+</code></pre>
+<ol start="5">
+<li>And finally create a file <code>app.py</code> with the ff content</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> time
+<span class="token keyword">from</span> flask <span class="token keyword">import</span> Flask
+
+app <span class="token operator">=</span> Flask<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">'Hello, World!'</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    app<span class="token punctuation">.</span>run<span class="token punctuation">(</span>host<span class="token operator">=</span><span class="token string">"0.0.0.0"</span><span class="token punctuation">,</span> debug<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+</code></pre>
+<ol start="6">
+<li>run <code>docker-compose up</code> to build the image and run the docker container</li>
+<li>Navigate to your browser and go to <code>http://127.0.0.1:5000/</code></li>
+</ol>
+<h3 id="the-hosts-file">The HOSTS file</h3>
+<p>Now let’s edit the hosts file to add more meaningful name to our app. Add the ff line to your machine’s host file</p>
+<pre><code>127.0.0.1 my-flask-app.com
+</code></pre>
+<p><strong>Mac</strong><br>
+Using terminal type <code>sudo vim /etc/hosts</code></p>
+<p><strong>Windows 7</strong><br>
+Type <code>notepad c:\windows\system32\drivers\etc\hosts</code> into Run Line</p>
+<p>Open your browser and type <code>http://my-flask-app.com:5000/</code></p>
+<h2 id="pip">Pip</h2>
+<p>pip is a package management system used to install and manage software packages written in Python.pip is a package management system used to install and manage software packages written in Python.</p>
+<h2 id="decorator">Decorator</h2>
+<p>A decorator is a function that takes another function and extends the behavior of the latter function without explicitly modifying it.</p>
+<h2 id="http-methods">HTTP Methods</h2>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> request
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/login'</span><span class="token punctuation">,</span> methods<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'GET'</span><span class="token punctuation">,</span> <span class="token string">'POST'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> request<span class="token punctuation">.</span>method <span class="token operator">==</span> <span class="token string">'POST'</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> do_the_login<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> show_the_login_form<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        
+</code></pre>
+<h2 id="templating">Templating</h2>
+<p>Flask uses Jinja2 for templating<br>
+<a href="http://jinja.pocoo.org/docs/2.10/templates/">http://jinja.pocoo.org/docs/2.10/templates/</a></p>
+<p>example:</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token doctype">&lt;!doctype html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Hello from Flask<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+{% if name %}
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>Hello {{ name }}!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+{% else %}
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>Hello, World!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+{% endif %}
+</code></pre>
+<p>Basic Jinja2 syntax</p>
+<ul>
+<li><code>{% ... %}</code>  for  <a href="http://jinja.pocoo.org/docs/2.10/templates/#list-of-control-structures">Statements</a></li>
+<li><code>{{ ... }}</code>  for  <a href="http://jinja.pocoo.org/docs/2.10/templates/#expressions">Expressions</a>  to print to the template output</li>
+<li><code>{# ... #}</code>  for  <a href="http://jinja.pocoo.org/docs/2.10/templates/#comments">Comments</a>  not included in the template output</li>
+<li><code># ... ##</code>  for  <a href="http://jinja.pocoo.org/docs/2.10/templates/#line-statements">Line Statements</a></li>
+</ul>
+<h2 id="request-object">Request Object</h2>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> request
+</code></pre>
+<p>Current Method - <code>request.method</code><br>
+To access data passed through POST or PUT method - <code>request.form[&lt;name&gt;]</code><br>
+To access get parameters - <code>request.args.get(&lt;name&gt;)</code></p>
+</div>
+</body>
+
+</html>
