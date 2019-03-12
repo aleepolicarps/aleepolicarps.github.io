@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>II. Templating with Jinja</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="jinja2">Jinja2</h1>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>My Webpage<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>navigation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">for</span> <span class="token variable">item</span> <span class="token keyword">in</span> <span class="token variable">navigation</span> %}</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href="</span><span class="token property">{{ <span class="token variable">item</span><span class="token punctuation">.</span><span class="token variable">href</span> }}</span><span class="token attr-name">"</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">item</span><span class="token punctuation">.</span><span class="token variable">caption</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">endfor</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>My Webpage<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{{ <span class="token variable">a_variable</span> }}</span>
+
+    <span class="token comment">{# a comment #}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<p>There are a few kinds of delimiters. The default Jinja delimiters are configured as follows:</p>
+<ul>
+<li><code>{% ... %}</code>  for  Statements</li>
+<li><code>{{ ... }}</code>  for Expression to the template output</li>
+<li><code>{# ... #}</code>  for  Comments not included in the template output</li>
+<li><code># ... ##</code>  for  Line Statements</li>
+</ul>
+<h2 id="variables">Variables</h2>
+<p>Template variables are defined by the context dictionary passed to the template</p>
+<p>The following lines do the same thing:</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{{ <span class="token variable">foo</span><span class="token punctuation">.</span><span class="token variable">bar</span> }}</span>
+<span class="token property">{{ <span class="token variable">foo</span><span class="token punctuation">[</span><span class="token string">'bar'</span><span class="token punctuation">]</span> }}</span>
+</code></pre>
+<h2 id="filters">Filters</h2>
+<p>Filters are separated from the variable by a pipe symbol (<code>|</code>) and may have optional arguments in parentheses.<br>
+<em>Filters can be chained</em><br>
+Example:<br>
+<code>{{ name|striptags|title }}</code><br>
+is the sames as<br>
+<code>(title(striptags(name)))</code></p>
+<h2 id="escaping">Escaping</h2>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">raw</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">for</span> <span class="token variable">item</span> <span class="token keyword">in</span> <span class="token variable">seq</span> %}</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">item</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">endfor</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endraw</span> %}</span>
+</code></pre>
+<h2 id="inheritance">Inheritance</h2>
+<h3 id="base-template-parent">Base Template (parent)</h3>
+<p>a simple HTML skeleton document</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">block</span> <span class="token variable">head</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>style.css<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span><span class="token property">{% <span class="token keyword">block</span> <span class="token function">title</span> %}</span><span class="token property">{% <span class="token keyword">endblock</span> %}</span> - My Webpage<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token property">{% <span class="token keyword">endblock</span> %}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token property">{% <span class="token keyword">block</span> <span class="token variable">content</span> %}</span><span class="token property">{% <span class="token keyword">endblock</span> %}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token property">{% <span class="token keyword">block</span> <span class="token variable">footer</span> %}</span>
+        <span class="token entity" title="©">&amp;copy;</span> Copyright 2008 by <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://domain.invalid/<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>you<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>.
+        <span class="token property">{% <span class="token keyword">endblock</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h3 id="child-template">Child Template</h3>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">extends</span> <span class="token string">"base.html"</span> %}</span>
+<span class="token property">{% <span class="token keyword">block</span> <span class="token function">title</span> %}</span>Index<span class="token property">{% <span class="token keyword">endblock</span> %}</span>
+<span class="token property">{% <span class="token keyword">block</span> <span class="token variable">head</span> %}</span>
+    <span class="token property">{{ <span class="token variable">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span> }}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token style language-css">
+        <span class="token selector"><span class="token class">.important</span> </span><span class="token punctuation">{</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token hexcode">#336699</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endblock</span> %}</span>
+<span class="token property">{% <span class="token keyword">block</span> <span class="token variable">content</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>Index<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>important<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      Welcome to my awesome homepage.
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endblock</span> %}</span>
+</code></pre>
+<p><code>{% extends %}</code> - tells the template engine that this template “extends” another template</p>
+<h3 id="super">Super</h3>
+<p>renders the contents</p>
+<h3 id="named-block-end-tags">Named Block End-Tags</h3>
+<p>You can add matching names to endblock for better code readability</p>
+<h2 id="list-of-control-structures">List of Control Structures</h2>
+<h3 id="for">For</h3>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>Members<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">for</span> <span class="token variable">user</span> <span class="token keyword">in</span> <span class="token variable">users</span> %}</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">user</span><span class="token punctuation">.</span><span class="token variable">username</span>}}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endfor</span> %}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h3 id="if">If</h3>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">if</span> <span class="token variable">users</span> %}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">for</span> <span class="token variable">user</span> <span class="token keyword">in</span> <span class="token variable">users</span> %}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">user</span><span class="token punctuation">.</span><span class="token variable">username</span><span class="token keyword">|</span><span class="token function">e</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endfor</span> %}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{% <span class="token keyword">endif</span> %}</span>
+</code></pre>
+<h3 id="macros">Macros</h3>
+<p>Macros are comparable with functions in regular programming languages.</p>
+<p>They are useful to put often used idioms into reusable functions to not repeat yourself (“DRY”).</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">macro</span> <span class="token variable">input</span><span class="token punctuation">(</span><span class="token variable">name</span><span class="token punctuation">,</span> <span class="token variable">value</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">,</span> <span class="token variable">type</span><span class="token operator">=</span><span class="token string">'text'</span><span class="token punctuation">,</span> <span class="token variable">size</span><span class="token operator">=</span><span class="token important">20</span><span class="token punctuation">)</span> <span class="token operator">-</span>%}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type="</span><span class="token property">{{ <span class="token variable">type</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">name="</span><span class="token property">{{ <span class="token variable">name</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">value="</span><span class="token property">{{
+        <span class="token variable">value</span>}}</span><span class="token attr-name">"</span> <span class="token attr-name">size="</span><span class="token property">{{ <span class="token variable">size</span> }}</span><span class="token attr-name">"</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{%<span class="token operator">-</span> <span class="token keyword">endmacro</span> %}</span>
+</code></pre>
+<p>Usage</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">input</span><span class="token punctuation">(</span><span class="token string">'username'</span><span class="token punctuation">)</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">input</span><span class="token punctuation">(</span><span class="token string">'password'</span><span class="token punctuation">,</span> <span class="token variable">type</span><span class="token operator">=</span><span class="token string">'password'</span><span class="token punctuation">)</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h3 id="assignments">Assignments</h3>
+<p>Inside code blocks, you can also assign values to variables. Assignments at top level (outside of blocks, macros or loops) are exported from the template like top level macros and can be imported by other templates.</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">set</span> <span class="token variable">navigation</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> <span class="token string">'Index'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">'about.html'</span><span class="token punctuation">,</span> <span class="token string">'About'</span><span class="token punctuation">)</span><span class="token punctuation">]</span> %}</span>
+<span class="token property">{% <span class="token keyword">set</span> <span class="token variable">key</span><span class="token punctuation">,</span> <span class="token variable">value</span> <span class="token operator">=</span> <span class="token variable">call_something</span><span class="token punctuation">(</span><span class="token punctuation">)</span> %}</span>
+</code></pre>
+<h3 id="blocks">Blocks</h3>
+<h3 id="include">Include</h3>
+<p>The  include  statement is useful to include a template and return the rendered contents of that file into the current namespace:</p>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">include</span> <span class="token string">'header.html'</span> %}</span>
+    Body
+<span class="token property">{% <span class="token keyword">include</span> <span class="token string">'footer.html'</span> %}</span>
+</code></pre>
+<h3 id="import">Import</h3>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token keyword">macro</span> <span class="token variable">input</span><span class="token punctuation">(</span><span class="token variable">joname</span><span class="token punctuation">,</span> <span class="token variable">value</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">,</span> <span class="token variable">type</span><span class="token operator">=</span><span class="token string">'text'</span><span class="token punctuation">)</span> <span class="token operator">-</span>%}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type="</span><span class="token property">{{ <span class="token variable">type</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">value="</span><span class="token property">{{ <span class="token variable">value</span><span class="token keyword">|</span><span class="token function">e</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">name="</span><span class="token property">{{ <span class="token variable">name</span> }}</span><span class="token attr-name">"</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{%<span class="token operator">-</span> <span class="token keyword">endmacro</span> %}</span>
+
+<span class="token property">{%<span class="token operator">-</span> <span class="token keyword">macro</span> <span class="token variable">textarea</span><span class="token punctuation">(</span><span class="token variable">name</span><span class="token punctuation">,</span> <span class="token variable">value</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">,</span> <span class="token variable">rows</span><span class="token operator">=</span><span class="token important">10</span><span class="token punctuation">,</span> <span class="token variable">cols</span><span class="token operator">=</span><span class="token important">40</span><span class="token punctuation">)</span> <span class="token operator">-</span>%}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>textarea</span> <span class="token attr-name">name="</span><span class="token property">{{ <span class="token variable">name</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">rows="</span><span class="token property">{{ <span class="token variable">rows</span> }}</span><span class="token attr-name">"</span> <span class="token attr-name">cols="</span><span class="token property">{{ <span class="token variable">cols</span>
+        }}</span><span class="token attr-name">"</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">value</span><span class="token keyword">|</span><span class="token function">e</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>textarea</span><span class="token punctuation">&gt;</span></span>
+<span class="token property">{%<span class="token operator">-</span> <span class="token keyword">endmacro</span> %}</span>
+</code></pre>
+<pre class=" language-jinja2"><code class="prism  language-jinja2"><span class="token property">{% <span class="token variable">import</span> <span class="token string">'forms.html'</span> <span class="token keyword">as</span> <span class="token variable">forms</span> %}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dl</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dt</span><span class="token punctuation">&gt;</span></span>Username<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dt</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dd</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">forms</span><span class="token punctuation">.</span><span class="token variable">input</span><span class="token punctuation">(</span><span class="token string">'username'</span><span class="token punctuation">)</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dd</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dt</span><span class="token punctuation">&gt;</span></span>Password<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dt</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dd</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">forms</span><span class="token punctuation">.</span><span class="token variable">input</span><span class="token punctuation">(</span><span class="token string">'password'</span><span class="token punctuation">,</span> <span class="token variable">type</span><span class="token operator">=</span><span class="token string">'password'</span><span class="token punctuation">)</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dd</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dl</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token property">{{ <span class="token variable">forms</span><span class="token punctuation">.</span><span class="token variable">textarea</span><span class="token punctuation">(</span><span class="token string">'comment'</span><span class="token punctuation">)</span> }}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<p><em>Extra</em></p>
+<h1 id="python-list-comprehension">Python List Comprehension</h1>
+<p>Pythons’s concise way of building lists.</p>
+<p>Example:</p>
+<pre class=" language-python"><code class="prism  language-python">x <span class="token operator">=</span>  <span class="token punctuation">[</span>i <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+</code></pre>
+<pre class=" language-python"><code class="prism  language-python">x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> temp <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	x<span class="token punctuation">.</span>append<span class="token punctuation">(</span>temp<span class="token punctuation">)</span>
+</code></pre>
+</div>
+</body>
+
+</html>
