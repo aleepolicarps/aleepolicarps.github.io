@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>II. SuperGlobals</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="php-global-variables---superglobals">PHP Global Variables - Superglobals</h1>
+<p>always accessible, regardless of scope - and you can access them from any function, class or file without having to do anything special.</p>
+<ul>
+<li>$GLOBALS</li>
+<li>$_SERVER</li>
+<li>$_REQUEST</li>
+<li>$_POST</li>
+<li>$_GET</li>
+<li>$_FILES</li>
+<li>$_ENV</li>
+<li>$_COOKIE</li>
+<li>$_SESSION</li>
+</ul>
+<h2 id="globals">$GLOBALS</h2>
+<p>used to access global variables from anywhere in the PHP script (also from within functions or methods).</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token variable">$x</span> <span class="token operator">=</span> <span class="token number">75</span><span class="token punctuation">;</span>  
+<span class="token variable">$y</span> <span class="token operator">=</span> <span class="token number">25</span><span class="token punctuation">;</span>  
+  
+<span class="token keyword">function</span> <span class="token function">addition</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+<span class="token variable">$GLOBALS</span><span class="token punctuation">[</span><span class="token string">'z'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$GLOBALS</span><span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token variable">$GLOBALS</span><span class="token punctuation">[</span><span class="token string">'y'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
+  
+<span class="token function">addition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span> <span class="token variable">$z</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="server">$_SERVER</h2>
+<p>holds information about headers, paths, and script locations.</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'PHP_SELF'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'SERVER_NAME'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'HTTP_HOST'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'HTTP_REFERER'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'HTTP_USER_AGENT'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'SCRIPT_NAME'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="request">$_REQUEST</h2>
+<p>used to collect data after submitting an HTML form.</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>  
+  
+&lt;form method="post"  action="<span class="token prolog">&lt;?php  echo  $_SERVER['PHP_SELF'];?&gt;</span>"&gt;  
+Name: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span>  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>fname<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>  
+  
+<span class="token prolog">&lt;?php  
+if  ($_SERVER["REQUEST_METHOD"] ==  "POST") {  
+	// collect value of input field  
+	$name =  $_REQUEST['fname'];  
+	if  (empty($name)) {  
+		echo  "Name is empty";  
+	}  else  {  
+		echo  $name;  
+	}  
+}  
+?&gt;</span>  
+  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h2 id="post">$_POST</h2>
+<p>used to collect form data after submitting an HTML form with method=“post”</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>  
+  
+&lt;form method="post"  action="<span class="token prolog">&lt;?php  echo  $_SERVER['PHP_SELF'];?&gt;</span>"&gt;  
+Name: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span>  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>fname<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>  
+  
+<span class="token prolog">&lt;?php  
+if  ($_SERVER["REQUEST_METHOD"] ==  "POST") {  
+	// collect value of input field  
+	$name =  $_POST['fname'];  
+	if  (empty($name)) {  
+		echo  "Name is empty";  
+	}  else  {  
+		echo  $name;  
+	}  
+}  
+?&gt;</span>  
+  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h2 id="get">$_GET</h2>
+<p>used to collect form data after submitting an HTML form with method=“get”.</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>  
+  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>test_get.php?subject=PHP<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Test $GET<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>  
+  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<pre><code>&lt;html&gt;  
+&lt;body&gt;  
+  
+&lt;?php  
+echo  "Study "  .  $_GET['subject'];
+?&gt;  
+  
+&lt;/body&gt;  
+&lt;/html&gt;
+</code></pre>
+<h3 id="exercise">Exercise:</h3>
+<p>Create a signup form with the following fields and rules. Use PHP for field validation.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Required. + Must only contain letters and whitespace</td>
+</tr>
+<tr>
+<td>E-mail</td>
+<td>Required. + Must contain a valid email address (with @ and .)</td>
+</tr>
+<tr>
+<td>Website</td>
+<td>Optional. If present, it must contain a valid URL</td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>Optional. Multi-line input field (textarea)</td>
+</tr>
+<tr>
+<td>Gender</td>
+<td>Required. Must select one</td>
+</tr>
+</tbody>
+</table><ul>
+<li>If all validation is passed, display a success page. Otherwise, display the form again with the user’s input and the proper error message.</li>
+<li>No need for styling but you can apply any styling you want.</li>
+</ul>
+<p>Upon submission: pass only 2 files. 1 for success page and 1 for 1 the form with validation rules.</p>
+</div>
+</body>
+
+</html>
