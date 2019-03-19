@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>III. More to Flask</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h2 id="url-building">URL Building</h2>
+<p>To build a URL, use the <code>url_for</code> function.</p>
+<ul>
+<li>1st argument = function name</li>
+<li>2nd or more = arguments or parameters</li>
+</ul>
+<p>Rationale:</p>
+<ol>
+<li>Reversing is often more descriptive than hard-coding the URLs.</li>
+<li>You can change your URLs in one go instead of needing to remember to manually change hard-coded URLs.</li>
+<li>URL building handles escaping of special characters and Unicode data transparently.</li>
+<li>The generated paths are always absolute, avoiding unexpected behavior of relative paths in browsers.</li>
+<li>If your application is placed outside the URL root, for example, in    <code>/myapplication</code>  instead of  <code>/</code>,  <code>url_for()</code>properly handles that for you.</li>
+</ol>
+<h3 id="cookies">Cookies</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> request
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    username <span class="token operator">=</span> request<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'username'</span><span class="token punctuation">)</span>
+    <span class="token comment"># use cookies.get(key) instead of cookies[key] to not get a</span>
+    <span class="token comment"># KeyError if the cookie is missing.</span>
+</code></pre>
+<p>Storing cookies:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> make_response
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    resp <span class="token operator">=</span> make_response<span class="token punctuation">(</span>render_template<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    resp<span class="token punctuation">.</span>set_cookie<span class="token punctuation">(</span><span class="token string">'username'</span><span class="token punctuation">,</span> <span class="token string">'the username'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> resp
+</code></pre>
+<h2 id="redirects-and-errors">Redirects and Errors</h2>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> redirect<span class="token punctuation">(</span>url_for<span class="token punctuation">(</span><span class="token string">'login'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/login'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    abort<span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span>
+</code></pre>
+<h4 id="errorhandler"><code>errorhandler</code></h4>
+<p>used to customize error pages</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> render_template
+
+@app<span class="token punctuation">.</span>errorhandler<span class="token punctuation">(</span><span class="token number">404</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">page_not_found</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'page_not_found.html'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">404</span>
+</code></pre>
+<h2 id="sessions">Sessions</h2>
+<p>allows you to store information specific to a user from one request to the next. In order to use sessions you have to set a secret key.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> Flask<span class="token punctuation">,</span> session<span class="token punctuation">,</span> redirect<span class="token punctuation">,</span> url_for<span class="token punctuation">,</span> escape<span class="token punctuation">,</span> request
+
+app <span class="token operator">=</span> Flask<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+app<span class="token punctuation">.</span>secret_key <span class="token operator">=</span> b<span class="token string">'_5#y2L"F4Q8z\n\xec]/'</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token string">'username'</span> <span class="token keyword">in</span> session<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token string">'Logged in as %s'</span> <span class="token operator">%</span> escape<span class="token punctuation">(</span>session<span class="token punctuation">[</span><span class="token string">'username'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token string">'You are not logged in'</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/login'</span><span class="token punctuation">,</span> methods<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'GET'</span><span class="token punctuation">,</span> <span class="token string">'POST'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> request<span class="token punctuation">.</span>method <span class="token operator">==</span> <span class="token string">'POST'</span><span class="token punctuation">:</span>
+        session<span class="token punctuation">[</span><span class="token string">'username'</span><span class="token punctuation">]</span> <span class="token operator">=</span> request<span class="token punctuation">.</span>form<span class="token punctuation">[</span><span class="token string">'username'</span><span class="token punctuation">]</span>
+        <span class="token keyword">return</span> redirect<span class="token punctuation">(</span>url_for<span class="token punctuation">(</span><span class="token string">'index'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token triple-quoted-string string">'''
+ &lt;form method="post"&gt;
+ &lt;p&gt;&lt;input type=text name=username&gt;
+ &lt;p&gt;&lt;input type=submit value=Login&gt;
+ &lt;/form&gt;
+ '''</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/logout'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">logout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># remove the username from the session if it's there</span>
+    session<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token string">'username'</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> redirect<span class="token punctuation">(</span>url_for<span class="token punctuation">(</span><span class="token string">'index'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h1 id="exercise">Exercise:</h1>
+<p>From the activity you did last week, extend your application such that it passes the following requirements.</p>
+<ol>
+<li>After successfully logging in, save the user’s data to the session object to indicate that the user has successfully logged in. Then redirect the user to <code>/my-profile</code> where an image placeholder, the user’s email and password is displayed and a link to <code>/logout</code>.</li>
+<li>If user authentication on login page is not successful, display the form again with proper error messages.</li>
+<li><code>/logout</code> url should delete the users data from the session thus removing the authentication.</li>
+<li>If the user is not yet authenticated, either by clicking logout or by failed login –
+<ul>
+<li>user must not be able to access <code>/my-profile</code> (Authentication error)</li>
+<li>user must not be able to logout, the user should be redirected to the login page</li>
+</ul>
+</li>
+<li>You must also track if the user has successfully logged in before or if it’s the first time the user has logged in. If first time, display <code>Welcome to &lt;Application Name&gt;</code>, otherwise display <code>Welcome to back &lt;Application Name&gt;</code>. You can do so manipulating the cookies.</li>
+</ol>
+<p>Submission: Push your code to a different branch – <code>20190310</code></p>
+</div>
+</body>
+
+</html>
