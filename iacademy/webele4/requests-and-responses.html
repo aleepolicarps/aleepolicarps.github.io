@@ -24,6 +24,22 @@
 <li>The generated paths are always absolute, avoiding unexpected behavior of relative paths in browsers.</li>
 <li>If your application is placed outside the URL root, for example, in    <code>/myapplication</code>  instead of  <code>/</code>,  <code>url_for()</code>properly handles that for you.</li>
 </ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> Flask<span class="token punctuation">,</span> url_for
+
+app <span class="token operator">=</span> Flask<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">'index'</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/login'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">'login'</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/user/&lt;username&gt;'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">profile</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">'{}\'s profile'</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span>
+</code></pre>
 <h3 id="cookies">Cookies</h3>
 <pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> request
 
