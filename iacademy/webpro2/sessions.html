@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>III. Sessions</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="sessions">Sessions</h1>
+<p>A way to store information (in variables) to be used across multiple pages where the information is not stored on the users computer.</p>
+<p>What is a session?</p>
+<ul>
+<li>You open the application</li>
+<li>Do some operations</li>
+<li>Save changes</li>
+<li>Close application</li>
+</ul>
+<h2 id="starting-the-session-session_start">Starting the session <code>session_start</code></h2>
+<p>We use the superglobal <code>$_SESSION</code> to store the sessions variables.</p>
+<p><strong><strong>Note:</strong></strong> The <code>session_start()</code> function must be the very first thing in your document. Before any HTML tags.</p>
+<p>Example.<br>
+Create a php file named <code>session1.php</code> and copy the following contents.</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token comment">// Start the session  </span>
+<span class="token function">session_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>  
+<span class="token doctype">&lt;!DOCTYPE html&gt;</span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>  
+  
+<span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token comment">// Set session variables  </span>
+<span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string">"background_color"</span><span class="token punctuation">]</span> <span class="token operator">=</span>  <span class="token string">"green"</span><span class="token punctuation">;</span>  
+<span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string">"text"</span><span class="token punctuation">]</span> <span class="token operator">=</span>  <span class="token string">"I amn from the SESSION"</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span>  <span class="token string">"Session variables are set."</span><span class="token punctuation">;</span>  
+
+<span class="token delimiter important">?&gt;</span></span>  
+  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<p>Next, create another php file and name it <code>session2.php</code> and copy the following contents.</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token function">session_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>  
+
+<span class="token doctype">&lt;!DOCTYPE html&gt;</span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span> <span class="token attr-name">bgcolor</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token php language-php"><span class="token delimiter important">&lt;?php</span> <span class="token keyword">echo</span> <span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string">'background_color'</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token delimiter important">?&gt;</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
+	 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span><span class="token php language-php"><span class="token delimiter important">&lt;?php</span> <span class="token keyword">echo</span> <span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string">'text'</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token delimiter important">?&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<p>Notice that the variables are not passed directly via request to the next page but are retrieved from the <code>$_SESSION</code> superglobal.</p>
+<p><strong>Note</strong><br>
+<code>$_SESSION</code>, while a superglobal, is still an array. You can get and print all the variables stored in the session by using the function <code>print_r</code></p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token function">print_r</span><span class="token punctuation">(</span><span class="token variable">$_SESSION</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="modifying-session-variables">Modifying session variables</h2>
+<p>To modify a session variable, simple re-assign a value to the index.</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string">'background_color'</span><span class="token punctuation">]</span>
+</code></pre>
+<h2 id="destroying-a-php-session">Destroying a PHP Session</h2>
+<p>If you wish to terminate the session (e.g. logout the user), you can call the functions <code>session_unset()</code> and <code>session_destroy()</code>.</p>
+</div>
+</body>
+
+</html>
