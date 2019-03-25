@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IV. File Handling</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="php-file-handling">PHP File Handling</h1>
+<h2 id="readfile">readfile()</h2>
+<p>reads a file and writes it to the output buffer</p>
+<p>Assume we have a text file called “webdictionary.txt”, stored on the server, that looks like this:</p>
+<pre><code>AJAX = Asynchronous JavaScript and XML  
+CSS = Cascading Style Sheets  
+HTML = Hyper Text Markup Language  
+PHP = PHP Hypertext Preprocessor  
+SQL = Structured Query Language  
+SVG = Scalable Vector Graphics  
+XML = EXtensible Markup Language
+</code></pre>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token keyword">echo</span> <span class="token function">readfile</span><span class="token punctuation">(</span><span class="token string">"webdictionary.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+<h2 id="fopen">fopen()</h2>
+<p>The first parameter of <code>fopen()</code> contains the name of the file to be opened and the second parameter specifies in which mode the file should be opened.</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token variable">$myfile</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"webdictionary.txt"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span> <span class="token keyword">or</span>  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"Unable to open file!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span> <span class="token function">fread</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">,</span><span class="token function">filesize</span><span class="token punctuation">(</span><span class="token string">"webdictionary.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>mode</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r</td>
+<td><strong>Open a file for read only</strong>. File pointer starts at the beginning of the file</td>
+</tr>
+<tr>
+<td>w</td>
+<td><strong>Open a file for write only</strong>. Erases the contents of the file or creates a new file if it doesn’t exist. File pointer starts at the beginning of the file</td>
+</tr>
+<tr>
+<td>a</td>
+<td><strong>Open a file for write only</strong>. The existing data in file is preserved. File pointer starts at the end of the file. Creates a new file if the file doesn’t exist</td>
+</tr>
+<tr>
+<td>x</td>
+<td><strong>Creates a new file for write only</strong>. Returns FALSE and an error if file already exists</td>
+</tr>
+<tr>
+<td>r+</td>
+<td><strong>Open a file for read/write</strong>. File pointer starts at the beginning of the file</td>
+</tr>
+<tr>
+<td>w+</td>
+<td><strong>Open a file for read/write</strong>. Erases the contents of the file or creates a new file if it doesn’t exist. File pointer starts at the beginning of the file</td>
+</tr>
+<tr>
+<td>a+</td>
+<td><strong>Open a file for read/write</strong>. The existing data in file is preserved. File pointer starts at the end of the file. Creates a new file if the file doesn’t exist</td>
+</tr>
+<tr>
+<td>x+</td>
+<td><strong>Creates a new file for read/write</strong>. Returns FALSE and an error if file already exists</td>
+</tr>
+</tbody>
+</table><h2 id="fread">fread()</h2>
+<ul>
+<li>reads from an open file.</li>
+<li>The first parameter of  <code>fread()</code>  contains the name of the file to read from and the second parameter specifies the maximum number of bytes to read.</li>
+</ul>
+<h2 id="fclose">fclose()</h2>
+<ul>
+<li>used to close an open file</li>
+</ul>
+<h2 id="read-single-line---fgets">Read Single Line - fgets()</h2>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token variable">$myfile</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"webdictionary.txt"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span> <span class="token keyword">or</span>  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"Unable to open file!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span> <span class="token function">fgets</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+<h2 id="check-end-of-file---feof">Check End-Of-File - feof()</h2>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token variable">$myfile</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"webdictionary.txt"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span> <span class="token keyword">or</span>  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"Unable to open file!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token comment">// Output one line until end-of-file  </span>
+<span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">feof</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+<span class="token keyword">echo</span> <span class="token function">fgets</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span> <span class="token punctuation">.</span> <span class="token string">"&lt;br&gt;"</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+<h2 id="write-to-file---fwrite">Write to File - fwrite()</h2>
+<p>used to write to a file</p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token variable">$myfile</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"newfile.txt"</span><span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span> <span class="token keyword">or</span>  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"Unable to open file!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token variable">$txt</span> <span class="token operator">=</span> <span class="token string">"John Doe\n"</span><span class="token punctuation">;</span>  
+<span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">,</span> <span class="token variable">$txt</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token variable">$txt</span> <span class="token operator">=</span> <span class="token string">"Jane Doe\n"</span><span class="token punctuation">;</span>  
+<span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">,</span> <span class="token variable">$txt</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$myfile</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+</div>
+</body>
+
+</html>
