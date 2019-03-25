@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IV. JSON</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="introduction-to-json">Introduction to JSON</h1>
+<ul>
+<li>JSON: <strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation.</li>
+<li>JSON is a syntax for storing and exchanging data.</li>
+<li>JSON is text, written with JavaScript object notation.</li>
+</ul>
+<h2 id="syntax">Syntax</h2>
+<p>The JSON syntax is a subset of the JavaScript syntax.</p>
+<h3 id="rules">Rules</h3>
+<ul>
+<li>Data is in name/value pairs</li>
+<li>Data is separated by commas</li>
+<li>Curly braces hold objects</li>
+<li>Square brackets hold arrays</li>
+</ul>
+<h2 id="values">Values</h2>
+<ul>
+<li>a string</li>
+<li>a number</li>
+<li>an object (JSON object)</li>
+<li>an array</li>
+<li>a boolean</li>
+<li>null</li>
+</ul>
+<h2 id="json-files">JSON Files</h2>
+<ul>
+<li>The file type for JSON files is “.json”</li>
+<li>The MIME type for JSON text is “application/json”</li>
+</ul>
+<h2 id="json-and-php">JSON and PHP</h2>
+<p>Objects and arrays in PHP can be converted into JSON by using the PHP function<code>json_encode()</code></p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>  
+<span class="token variable">$myArr</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"John"</span><span class="token punctuation">,</span> <span class="token string">"Mary"</span><span class="token punctuation">,</span> <span class="token string">"Peter"</span><span class="token punctuation">,</span> <span class="token string">"Sally"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token variable">$myJSON</span> <span class="token operator">=</span> <span class="token function">json_encode</span><span class="token punctuation">(</span><span class="token variable">$myArr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">echo</span> <span class="token variable">$myJSON</span><span class="token punctuation">;</span>  
+<span class="token delimiter important">?&gt;</span></span>
+</code></pre>
+<p>Convert JSON string to PHP arrays using <code>json_decode()</code></p>
+<pre class=" language-php"><code class="prism  language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token variable">$mySampleJson</span> <span class="token operator">=</span> <span class="token string">'{
+	"fruits": [
+		{
+			"name": "apple",
+			"color": "red"
+		}, 
+		{
+			"name": "papaya",
+			"color": "orange",		
+		}
+	]
+}'</span><span class="token punctuation">;</span>
+
+
+<span class="token variable">$array</span> <span class="token operator">=</span> <span class="token function">json_decode</span><span class="token punctuation">(</span><span class="token variable">$mySampleJson</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">print_r</span><span class="token punctuation">(</span><span class="token variable">$array</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</span></code></pre>
+<p><strong>Note</strong>: Note of the 2nd parameter of <code>json_encode</code>, if you want the result to be an array, always set to true. Otherwise, the result will be a PHP object.</p>
+</div>
+</body>
+
+</html>
