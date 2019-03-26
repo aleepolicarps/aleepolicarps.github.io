@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Files</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="static-files">Static Files</h1>
+<p>Dynamic web applications also need static files. These files are usually the CSS, JS and other MIME types we usually server over the web.</p>
+<ol>
+<li>Create a folder <code>static</code> on your package (same level as <a href="http://app.py">app.py</a>)</li>
+<li>Create a css file name <code>style.css</code></li>
+<li>On your Jinja template add a stylesheet with href <code>{{url_for('static', filename='style.css')</code></li>
+</ol>
+<p>You can use the function <code>url_for</code> to dynamically point to the files under the static folder and serve them over the web.</p>
+<p>Therefore, if you use a frontend module bundler such as webpack, you <code>dist</code> files should be saved in the static folder.</p>
+<p><strong>Accessing Subfolders</strong><br>
+Just supply the filepath relative to the static folder.</p>
+<pre><code>static/
+    css/
+        lib/
+            bootstrap.css
+        style.css
+        home.css
+        admin.css
+    js/
+        lib/
+            jquery.js
+        home.js
+        admin.js
+    img/
+        logo.svg
+        favicon.ico
+</code></pre>
+<p><code>{{ url_for('static', filename='img/favicon.ico') }}</code></p>
+<p>V. Python Classes</p>
+<h3 id="package">Package</h3>
+<p>a group of inter-connected modules</p>
+<h2 id="init__.py"><code>__init__.py</code></h2>
+<p>required to make Python treat the directories as containing packages</p>
+<pre><code>app.py  
+templates  
+	layouts\  
+		base.html  
+	admin.html  
+routes\  
+	__init__.py  
+	admin.py  
+	users.py  
+</code></pre>
+<h3 id="package-1">Package</h3>
+<p>a group of inter-connected modules</p>
+<h2 id="init__.py-1"><code>__init__.py</code></h2>
+<p>required to make Python treat the directories as containing packages</p>
+<pre><code>app.py
+templates
+	layouts\
+		base.html
+	admin.html
+routes\
+	__init__.py
+	admin.py
+	users.py
+
+</code></pre>
+<h2 id="the-blueprint">The Blueprint</h2>
+<p>A blueprint defines a collection of views, templates, static files and other elements that can be applied to an application. This is used to organize your application into distinct components.</p>
+<ol>
+<li>Create a folder named routes</li>
+<li>Under the folder routes, create a file name<code>__init__.py</code> and  leave it black.</li>
+<li>Create another file named <code>auth.py</code>and copy the following contents</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> Blueprint<span class="token punctuation">,</span> render_template
+
+auth <span class="token operator">=</span> Blueprint<span class="token punctuation">(</span><span class="token string">'auth'</span><span class="token punctuation">,</span> __name__<span class="token punctuation">)</span>
+
+@auth<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/login'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token keyword">def</span> <span class="token function">login_form</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token comment"># render your login form here</span>
+</code></pre>
+<ol start="4">
+<li>In you <a href="http://app.py">app.py</a> file, import the module we made<br>
+<code>from .routes.auth import auth</code></li>
+<li>After the flask app instantiation, add the line<br>
+<code>app.register_blueprint(profile)</code></li>
+</ol>
+<p>Now, the routes defined in <a href="http://auth.py">auth.py</a> can be access on the application.</p>
+<h3 id="url-prefix">URL Prefix</h3>
+<p>DRY! To avoid repeating yourself, you can assign a url prefix to blueprints such that they reside on their own paths and you don’t have to type the path manually for each route.</p>
+<p><code>auth = Blueprint('profile', __name__, url_prefix='/auth')</code><br>
+or<br>
+<code>app.register_blueprint(auth, url_prefix='/auth')</code></p>
+<h3 id="dynamic-prefix">Dynamic Prefix</h3>
+<p><code>profile = Blueprint('profile', __name__, url_prefix='/&lt;username&gt;')</code><br>
+or<br>
+<code>pp.register_blueprint(profile, url_prefix='/&lt;user_url_slug&gt;')</code></p>
+<h3 id="blueprint-structuring">Blueprint Structuring</h3>
+<p>Functional vs Divisional</p>
+<ul>
+<li>In a divisional structure, each blueprint is a collection of views, templates and static files which constitute a particular section of your application.</li>
+<li>In a functional structure, each blueprint is just a collection of views. The templates are all kept together, as are the static files.</li>
+</ul>
+<p>Functional</p>
+<pre><code>yourapp/
+    __init__.py
+    static/
+    templates/
+        home/
+        control_panel/
+        admin/
+    views/
+        __init__.py
+        home.py
+        control_panel.py
+        admin.py
+    models.py
+</code></pre>
+<p>Divisional</p>
+<pre><code>yourapp/
+    __init__.py
+    admin/
+        __init__.py
+        views.py
+        static/
+        templates/
+    home/
+        __init__.py
+        views.py
+        static/
+        templates/
+    control_panel/
+        __init__.py
+        views.py
+        static/
+        templates/
+    models.py
+</code></pre>
+<h2 id="sqlalchemy">SQLAlchemy</h2>
+<p>SQLAlchemy is an ORM (Object Relational Mapper). It’s basically an abstraction layer that sits on top of the raw SQL queries being executed on our database.</p>
+<pre><code>pip install SQLAlchemy
+pip install Flask-SQLAlchemy
+pip freeze &gt; requirements.txt
+</code></pre>
+</div>
+</body>
+
+</html>
