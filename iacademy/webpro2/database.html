@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PHP MySQL Database</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+        td, td {padding: 0 10px;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Database Management With PHP
+### PHP MySQL Database
+
+---
+
+# MySQL
+
+- Most popular database system used with PHP.
+- Database system used on the web
+- Runs on a server
+- Ideal for small or large applications
+- Uses standard MySQL
+
+---
+
+# Download MySQL Database
+
+If you don't have a PHP server with a MySQL Database, you can download it for free here: http://www.mysql.com (*Non XAMPP Users*)
+
+# Drivers
+PHP can connect with a MySQL databases using either of the following servers
+ - MySQLi (http://php.net/manual/en/mysqli.installation.php)
+ - PDO (PHP Data Objects; http://php.net/manual/en/pdo.installation.php)
+
+---
+## Create a database connection credentials
+
+If you are using XAMPP, manage the database via PHPMyAdmin(http://localhost/phpmyadmin).
+
+If you are using native PHP on your machine, download a MySQL client (Workbench or SequelPro).
+
+---
+## MySQLi
+
+For simplicity, let's use the procedural version of MySQLi in this lecture.
+Documentation:
+- https://www.php.net/manual/en/class.mysqli.php
+- https://www.w3schools.com/php/php_ref_mysqli.asp
+
+---
+## Connecting to the database
+
+1. From PHPMyAdmin, check the MySQL databases and click on the Users table.
+2. Click on `Edit privileges` and go to `Change Admin password`
+3. Type your new password and save it
+
+```PHP
+<?php
+$hostname = "localhost";
+$username = "root";
+$password = "password"; // the password set in PHPMyAdmin
+
+// Create connection
+$conn = mysqli_connect($hostname, $username, $password);
+
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+echo "Connected successfully";
+?>
+```
+
+
+`mysqli_connect` - Opens a new connection to the MySQL server.
+---
+
+# Close the Connection
+The connection will be closed automatically when the script ends. However, if you need to close the connection before, you can do the following:
+```php
+mysqli_close($conn);
+```
+
+`mysqli_close` - Closes a previously opened database connection
+
+---
+# Creating a MySQL DB
+
+`CREATE DATABASE <database name>`
+
+Example: The following lines of code will create a database named `iAcademy`.
+
+```php
+<?php
+$hostname = "localhost";
+$username = "root";
+$password = "password";
+
+// Create connection
+$conn = mysqli_connect($hostname, $username, $password);
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Create database
+$sql = "CREATE DATABASE iAcademy";
+if (mysqli_query($conn, $sql)) {
+    echo "Database created successfully";
+} else {
+    echo "Error creating database: " . mysqli_error($conn);
+}
+
+mysqli_close($conn);
+?>
+```
+
+---
+# Creating a MySQL DB (cont.)
+*Note:*
+You don't need to write this set of code whenever you need to create a database. You can do it using your MySQL client.
+
+To Do:
+1. Drop the `iAcademy` database using `DROP DATABASE` statement. (`DROP DATABASE iAcademy`)
+2. Recreate the database using your MySQL client.
+
+
+`mysqli_query` - Performs a query against the database.
+Returns
+ - `false` on failure
+ - `mysli_result` for successful SELECT, SHOW, DESCRIBE, EXPLAIN
+ - `true` for other successful queries
+---
+# Create MySQL Tables
+`CREATE TABLE ...`
+
+Let's create a table named `guests` with columns: `id`, `first_name`, `last_name`, `time_in`,
+
+```sql
+CREATE TABLE guests (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `first_name` VARCHAR(50) NOT NULL,
+    `last_name` VARCHAR(50) NOT NULL,
+    `time_in` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+---
+# Create MySQL Tables (cont.)
+```php
+<?php
+$hostname = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "iAcademy";
+
+// Notice here that we have provided the database name on the connect function
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$sql = "CREATE TABLE guests (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+`first_name` VARCHAR(50) NOT NULL,
+`last_name` VARCHAR(50) NOT NULL,
+`time_in` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+if (mysqli_query($conn, $sql)) {
+    echo "Table MyGuests created successfully";
+} else {
+    echo "Error creating table: " . mysqli_error($conn);
+}
+?>
+```
+---
+# Insert Data
+After successfully creating a database and a table, we can use the `INSERT INTO ...`  statement to add data to them.
+
+*Notes:*
+ - SQL queries must be quoted (`'...'` or `"..."`)
+ - String values inside the SQL must be quoted
+ - Numeric values must NOT be quoted
+ - The value NULL must not be quoted
+
+---
+# Insert Data (cont.)
+
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "iAcademy";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$sql = "INSERT INTO guests (firstname, lastname) VALUES ('John', 'Doe')";
+
+if (mysqli_query($conn, $sql)) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+?>
+```
+*Notice that we did not provide values for `id` and `time_in`.*
+Check your MySQL client if there is a new entry with name John Doe.
+---
+# Batch Insert
+
+To insert multiple SQL statements, use the `mysqli_multi_query()` function.
+
+```<?php
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "iAcademy";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$sql = "INSERT INTO guests (firstname, lastname) VALUES ('Jon', 'Snow');";
+$sql. = "INSERT INTO guests (firstname, lastname) VALUES ('Ned', 'Stark');";
+
+if (mysqli_multi_query($conn, $sql)) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+?>
+```
+
+`mysqli_multi_query` - Performs one or more queries on the database
+
+---
+# Select Data
+`SELECT <columns> or * FROM <table>`
+
+```php
+<?php
+$sql = "SELECT * FROM guests";
+$result = mysqli_query($conn, $sql);
+
+if(mysqli_num_rows($result) < 0) {
+    echo "No results found.";
+} else {
+    while($row = mysqli_fetch_assoc($result)) {
+        echo "id: " . $row["id"]. " - Name: " . $row["first_name"]. " " . $row["last_name"]. "<br>";
+    }
+}
+?>
+```
+`mysqli_num_rows` - Returns the number of rows in a result set
+`mysqli_fetch_assoc` - Fetches a result row as an associative array
+
+---
+
+# Select Data (cont.)
+
+Alternatively, you can get the result of the query all at once using `mysqli_fetch_all()`
+```php
+<?php
+$sql = "SELECT * FROM guests";
+$result = mysqli_query($conn, $sql);
+
+if(mysqli_num_rows($result) < 0) {
+    echo "No results found.";
+} else {
+    $guests = mysqli_fetch_all($result);
+    print_r($guests);
+}
+?>
+```
+`mysqli_fetch_all` - Fetches all result rows as an associative array, a numeric array, or both
+
+---
+# Update and Delete
+
+The `UPDATE` and `DELETE` statements are both performed in PHP using the function `mysqli_query`.
+```php
+$sql = "DELETE FROM guest WHERE id=1";
+if (mysqli_query($conn, $sql)) {
+    echo "Record deleted successfully";
+} else {
+    echo "Error deleting record: " . mysqli_error($conn);
+}
+```
+
+```php
+$sql = "UPDATE MyGuests SET first_name='Aegon', last_name='Targargen'
+    WHERE first_name='Jon' and last_name='Snow'";
+if (mysqli_query($conn, $sql)) {
+    echo "Record updated successfully";
+} else {
+    echo "Error updating record: " . mysqli_error($conn);
+}
+```
+
+---
+# Prepared Statements
+
+Used to execute SQL Statements repeatedly. It works like this:
+1. Prepare: An SQL statement template is created and sent to the database. Certain values are left unspecified, called * parameters *.
+2. Parse: The database parses, compiles, and performs query optimization on the SQL statement template, and stores the result without executing it.
+3. Execute: At a later time, the application bind the values to the parameters, and the database executes the statement. The application may execute the statement as many time as it wants with different values.
+
+Advantages of using prepared statements:
+ - reduce parsing time as the preparation on the query is done only once
+ - bound parameters minimize bandwidth to the server as you need send only the parameters each time and not the whole query
+ - useful agains SQL injections
+
+---
+# Prepared Statements (cont.)
+
+### SQL Injection
+A code inject technoque that might destroy your database. It is one of the most common web attacks. It works by placing malicious code in SQL statements via a webpage's inputs.
+
+Example: In your webpage, you accept an input for `name` and `password`. In the search input box, the attacker give you an SQL statement.
+
+Username: " or ""="
+Password: " or ""="
+
+If you only use string concatination:
+```php
+$sql = 'SELECT * FROM users WHERE username="' . $_POST['username'] . '" AND pass="' . $_POST['password']. '"';
+```
+The resulting query will be
+```sql
+SELECT * FROM users WHERE username="" or ""="" AND pass="" or ""=""
+```
+
+Thus the WHERE clause will always be true.
+
+---
+# Prepared Statements (cont.)
+
+How to properly execute the query using prepared statements
+```php
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$statement = mysqli_prepare($conn, 'SELECT * FROM users WHERE name = ? AND password = ?');
+mysqli_stmt_bind_param($statement, 'ss', $username, $password);
+mysqli_stmt_execute($statement);
+$result = mysqli_stmt_get_result($statement);
+$users = mysqli_fetch_all($result);
+
+print_r($users);
+```
+
+`mysqli_prepare` - 	Prepares an SQL statement for execution
+
+`mysqli_stmt_bind_param` - Bind variables for the parameter markers in the SQL statement that was passed to mysqli_prepare()
+
+`mysqli_stmt_execute` - Executes a prepared Query
+
+`mysqli_stmt_get_result` - Call to return a result set from a prepared statement query.
+
+---
+
+Paremeter Types
+
+`i`	- corresponding variable has type integer
+
+`d`	- corresponding variable has type double
+
+`s`	- corresponding variable has type string
+
+`b`	- corresponding variable is a blob and will be sent in packets
+
+
+---
+class: center, middle
+# Class activity
+---
+### 1. Database connect script
+To avoid repeated code when connecting to the database, let's create a script that will handle this and import the script whenever we need to connect to the database.
+Create a file named `init.php`, this will serve as our bootup script.
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "iAcademy";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+```
+---
+### 2. Insert
+1. Create a php file and name it 'guest-login.php' with the following contents -- form with first name and last name inputs
+    <div style="border: 1px solid; padding: 20px; margin: 20px;">
+        First name: <input type="text">
+        Last name: <input type="text">
+        <button>Login Guest</button>
+    </div>
+2. Set the form action="guest-login.php" and method="POST"
+3. Insert the provided data using mysqli_prepared_statement then redirect to `guest-list.php`
+```php
+require_once('init.php');
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+
+        $statement = mysqli_prepare($conn, 'INSERT INTO guest (first_name, last_name) VALUES (?s, ?s)');
+        mysqli_stmt_bind_param($statement, 'ss', $first_name, $last_name);
+        if(mysqli_stmt_execute($statement)) {
+            header('Location: guest-list.php');
+        } else {
+            $error_message = "Guest login failed. Try again.";
+        }
+}
+```
+---
+### 3. Display data
+Let's now display the guest on a table.
+1. Create a php file named `guest-list.php`
+2. Add the following contents
+
+```php
+<?php
+require_once('init.php');
+
+$sql = "SELECT * FROM guests";
+$result = mysqli_query($conn, $sql);
+
+if(mysqli_num_rows($result) < 0) {
+    echo "No results found.";
+} else {
+    $guest = mysqli_fetch_all($result);
+}
+```
+3. Display guests on a table where the last column contains a link to
+    UPDATE = "guest-update.php?id=(current_row_id)"
+    DELETE = "guest-delete.php?id=(current_row_id)"
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Time In</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Jon</td>
+                <td>Snow</td>
+                <td>2019-03-20 00:00:00</td>
+                <td>
+                    <a href="#">update</a>
+                    <a href="#">delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Ned</td>
+                <td>Stark</td>
+                <td>2019-03-20 04:00:00</td>
+                <td>
+                    <a href="#">update</a>
+                    <a href="#">delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+---
+### 4. Delete
+1. Create a file named `guest-delete.php`
+2. This script should delete the guest whose ID is provided in the GET parameter and redirect back to the guest list
+
+```php
+<?php
+
+require_once('init.php');
+
+if(!isset($_GET['id'])) {
+    $error_message = "Invalid input! Guest ID is required."
+} else {
+    $guest_id = $_GET['id'];
+    $statement = mysqli_prepare($conn, 'DELETE FROM guests WHERE id = ?i');
+    mysqli_stmt_bind_param($statement, 'i', $guest_id);
+    if(mysqli_stmt_execute($statement)) {
+        header('Location: guest-list.php');
+    } else {
+        $error_message = "Guest deletion failed. Try again!"
+    }
+}
+```
+---
+### 5. Update
+1. Create a file named `guest-update.php`
+2. This script should update the guest whose ID is provided in the GET parameter and redirect back to the guest list
+
+2 steps:
+1. Fetch the guest data and add the values to a form
+2. Update the data with the values provided in the form
+
+---
+```php
+<?php
+
+require_once('init.php');
+
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $guest_id = $_GET['id'];
+    $statement = mysqli_prepare($conn, 'SELECT * FROM guests WHERE id = ?i');
+    mysqli_stmt_bind_param($statement, 'i', $guest_id);
+    if(mysqli_stmt_execute($statement)) {
+        $result = mysqli_stmt_get_result($statement);
+        $guest = mysqli_fetch_assoc($result);
+    }
+} else {
+    $guest_id = $_POST['id'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $statement = mysqli_prepare($conn, 'UPDATE guests SET first_name = ?s, last_name = ?s WHERE id = ?');
+    mysqli_stmt_bind_param($statement, 'ssi', $first_name, $last_name, $id);
+    if(mysqli_stmt_execute($statement)) {
+        header('Location: guest-list.php');
+    } else {
+        $error_message = "Guest update failed. Try again!"
+    }
+}
+
+?>
+
+<form action="guest-update.php" method="POST">
+    <input type="hidden" name="id" value="<?php echo $guest['id']; ?>">
+    First name:<input type="text" name="first_name" value="<?php echo $guest['first_name']; ?>">
+    Last name:<input type="text" name="last_name" value="<?php echo $guest['last_name']; ?>">
+    <input type="submit" value="update guest">
+</form>
+```
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
