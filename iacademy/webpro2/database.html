@@ -459,7 +459,8 @@ if(mysqli_num_rows($result) < 0) {
 ```
 3. Display guests on a table where the last column contains a link to
     UPDATE = "guest-update.php?id=(current_row_id)"
-    DELETE = "guest-delete.php?id=(current_row_id)"
+    DELETE = "guest-delete.php
+d=(current_row_id)"
     <table border="1">
         <thead>
             <tr>
@@ -508,7 +509,7 @@ if(!isset($_GET['id'])) {
     $error_message = "Invalid input! Guest ID is required."
 } else {
     $guest_id = $_GET['id'];
-    $statement = mysqli_prepare($conn, 'DELETE FROM guests WHERE id = ?i');
+    $statement = mysqli_prepare($conn, 'DELETE FROM guests WHERE id = ?');
     mysqli_stmt_bind_param($statement, 'i', $guest_id);
     if(mysqli_stmt_execute($statement)) {
         header('Location: guest-list.php');
@@ -534,7 +535,7 @@ require_once('init.php');
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $guest_id = $_GET['id'];
-    $statement = mysqli_prepare($conn, 'SELECT * FROM guests WHERE id = ?i');
+    $statement = mysqli_prepare($conn, 'SELECT * FROM guests WHERE id = ?');
     mysqli_stmt_bind_param($statement, 'i', $guest_id);
     if(mysqli_stmt_execute($statement)) {
         $result = mysqli_stmt_get_result($statement);
@@ -544,7 +545,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $guest_id = $_POST['id'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $statement = mysqli_prepare($conn, 'UPDATE guests SET first_name = ?s, last_name = ?s WHERE id = ?');
+    $statement = mysqli_prepare($conn, 'UPDATE guests SET first_name = ?, last_name = ? WHERE id = ?');
     mysqli_stmt_bind_param($statement, 'ssi', $first_name, $last_name, $id);
     if(mysqli_stmt_execute($statement)) {
         header('Location: guest-list.php');
