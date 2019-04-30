@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Intro to Flask SQLAlchemy</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to SQLAlchemy
+
+---
+
+# SQLAlchemy
+ - A popular SQL toolkit and Object Relational Mapper.
+ - Written in Python
+
+---
+# ORM - Object Relational Mapper
+
+A programming technique for converting data between incompatible type systems in object-oriented programming languages. This created a "virtual object database" that can be used within programming languages.
+
+---
+
+# Introduction
+
+Let's create a new development environment with MySQL.
+## Dockerfile
+```
+FROM python:3.6.8
+ADD . /code
+WORKDIR /code
+RUN apt-get update
+RUN apt-get install python-mysqldb -y
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+```
+---
+## docker-compose.yml
+```
+version: '3'
+services:
+    web:
+        build: .
+        ports:
+            - "5000:5000"
+        volumes:
+            - .:/code
+
+    database:
+        image: mysql
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        ports:
+            - "33062:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=testdatabase
+            - MYSQL_USER=root
+            - MYSQL_PASSWORD=secret
+
+```
+---
+## requirements.txt
+
+```
+flask
+flask-sqlalchemy
+mysqlclient
+```
+
+---
+## models.py
+```python
+import flask_sqlalchemy
+
+db = flask_sqlalchemy.SQLAlchemy()
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    deadline = db.Column(db.DateTime)
+    is_done = db.Column(db.Boolean, nullable=False, default=False)
+```
+This is where we will define our models that we will map to the database. We can use Flask Sqlalchemy to create the schema using the definitions we set in this model.
+Notice that models all inherit from 'db.Model'. This is necessary to be able to use the features of db.Model in our objects.
+
+
+*Remarks*:
+To extend a class in Python, just put the Parent Class inside `(` `)` after the child's class name definition.
+
+---
+
+If `__tablename__` is not defined, the table name is automatically set. It's derived from the class name converted to lowercase with CamelCase converted to camel_case.
+
+e.g.
+
+Tasks -> tasks
+
+UserTasks -> user_tasks
+
+
+Use `Column` to define a column. The name of the column is the name you assign it to. The type of the column is the first argument to Column.
+You can provide the type or call it to provide the length.
+
+Available column types
+```
+Integer
+String(size)
+Text
+DateTime - expressed as Python datetime object
+Float
+Boolean
+PickleType
+LargeBinary
+```
+
+---
+## app.py
+
+```python
+from flask import Flask
+from models import db
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:secret@database/testdatabase'
+db.init_app(app)
+
+@app.route('/test-connection')
+def hello():
+    try:
+        db.session.query('1').all()
+        return 'Connected.'
+    except Exception as e:
+        return str(e)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)
+```
+
+To be able to connect to the database, you need to include the `CONNECTION_URL` to the application config with key `SQLALCHEMY_DATABASE_URI`.
+When you invoke `db.init_app(app)`, SQLAlchemy will automatically detect this as your connection url and establish a connection.
+
+---
+### Testing the Connection
+
+Open a browser and type localhost:5000/test-connection in the address bar. If we have successfully connected to the database, you will see 'Connected'.
+
+---
+# Connection URI Format
+`<dialect+driver>://<username>:<password>@<host>:<port>/<database>`
+
+e.g.:
+`mysql://root:secret@database/testdatabase`
+
+---
+
+# Creating the schema
+SQLAlchemy can create the schema for our application using the model definitions that inherit `db.Model`. To be able to create ALL the tables
+invoke the function `db.create_all()`
+
+```python
+@app.route('/create-schema')
+def create_schema():
+    db.create_all()
+    return 'Schema created.'
+```
+
+You should be able to check that the table `tasks` has been created.
+
+To check this, connect to a MySQL client with the following config. These values can be found inside `docker-compose.yml`
+
+username: root
+
+password: secret
+
+database: testdatabase
+
+host: localhost
+
+port: 33062
+
+---
+
+# Insert
+
+Through ORM, we no longer need to write lengthy SQL statements. We can query the database just by objects.
+
+import Task inside your app.py
+
+`from models import Task`.
+
+To insert to the database
+1. Instantiate the class Task and assign values
+```python
+task = Task()
+task.name = 'Wash dishes.'
+task.deadline = datetime.datetime.now()
+```
+2. add the object to the database session using `db.session.add(task)`
+3. finally, commit the session such that all models inside the session are updated or inserted
+
+---
+
+```python
+@app.route('/new-task')
+def new_task():
+    task = Task()
+    task.name = 'Wash dishes.'
+    task.deadline = datetime.datetime.now() # make sure you import datetime
+
+    db.session.add(task)
+    db.session.commit()
+    return 'New task created!'
+```
+
+1. Create the Python object
+2. Add it to the session
+3. Commit the session
+
+*Note:*
+`db.session.add()` does not insert the data to the database, you need to invoke `db.session.commit()` to finalize the transaction.
+
+---
+
+# Select
+
+Accessing the data in the database is very easy. There are available methods you can use to fetch and filter data.
+
+e.g. Fetching ALL contents of the database
+
+`Task.query.all()`
+
+```python
+@app.route('/tasks')
+def tasks_list():
+    tasks = Task.query.all()
+    task_names = ''
+    for task in tasks:
+        task_names = task_names + '<br>' + task.name
+
+    return task_names
+```
+
+---
+
+
+`Task.query.filter_by(id=1).first()`
+
+```python
+@app.route('/task/<id>')
+def task(id):
+    task = Task.query.filter_by(id=id).first()
+
+    if not task:
+        abort(404)
+
+    return task.name
+```
+---
+
+# Delete
+Deleting record is very similar to add to `add()` but instead we use `delete()`
+
+```python
+@app.route('/delete/<id>')
+def delete_task(id):
+    task = Task.query.get(id) # shortcut for Task.query.filter_by(id=1).first
+    db.session.delete(task)
+    db.session.commit()
+
+    return 'task deleted!'
+```
+---
+# Update
+1. Fetch the model
+2. Update the model
+3. Add to the session
+4. Commit the session
+
+```python
+@app.route('/update-task/<id>')
+def task_update(id):
+    task = Task.query.get(id)
+    task.is_done = True
+    db.session.add(task)
+    db.session.commit()
+
+    return 'task updated!'
+```
+---
+
+# Using Models in templates
+
+db.Models are just like regular objects, thus, you can use them inside jinja templates just as how you would use any other objects.
+
+---
+
+## Seatwork
+Update your midterm exam using database as data source.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
