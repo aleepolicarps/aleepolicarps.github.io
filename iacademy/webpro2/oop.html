@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OOP in PHP</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Object Oriented Programming in PHP
+
+---
+
+# OOP Concepts
+
+## class
+
+This is a programmer-defined data type, which includes local functions as well as local data.
+You can think of a class as a template for making many instances of the same kind (or class) of object.
+
+```php
+class User {
+
+}
+```
+
+
+---
+
+## object
+
+An individual instance of the data structure defined by a class.
+You define a class once and then make many objects that belong to it.
+Objects are also known as instance.
+
+
+```php
+$admin = new User();
+```
+---
+
+## Properties
+ - member variable
+ - They are defined by using one of the keywords public, protected or private, followed by a normal variable declaration.
+
+```php
+class User {
+    public $first_name;
+    public $last_name;
+}
+```
+---
+## Method
+ - member function
+ - A function (method) is a piece of code which may take some input in the form of parameter and does some processing and returns a value.
+ - You can define method by using one of the keywords public, protected or private, followed by a normal name declaration.
+
+```php
+class User {
+    public $first_name;
+    public $last_name;
+
+    public function setName($first_name, $last_name){
+
+    }
+}
+```
+---
+
+# Properties and methods visibility
+
+### private visibility
+ - This type allows access only to members of the same class. Members declared as private may only be accessed by the class that defines the member.
+ - Use this type if you want variable/function (method) to be visible in its own class only.
+
+```php
+class User {
+    private $first_name;
+    private $last_name;
+}
+```
+
+
+
+Fatal error if try to access from outside the class
+
+---
+### protected visibility
+
+ - This type allows access to members of the same class and instances from classes that inherit from that one only.
+ - Use this type if you want to make variable/function (method) to be visible in all classes that extend current class including the parent class.
+
+```php
+class User {
+    protected $first_name;
+    protected $last_name;
+}
+```
+
+#### Inheritance
+ - Inheritance is the mechanism of basing an object or class upon another object or class, retaining similar implementation.
+ - Parent Class > Child Class
+
+---
+### public visibility
+ - This type refers to a property or method that is accessible from anywhere. Any classes or code in general from outside the class can access it.
+ - Use this type if you want to make variable/function available from anywhere, other classes and instances of the object
+
+```php
+class User {
+    public $first_name;
+    public $last_name;
+}
+```
+
+
+Public visibility: can be access and modify from anywhere
+
+---
+
+# set class methods
+
+```php
+class User {
+    private $first_name;
+    private $last_name;
+
+    public function getName() { // can be accessed anywhere
+        return $this->first_name . ' ' . $this->last_name;
+    }
+}
+```
+---
+
+# `$this`
+
+It is the way to reference an instance of a class from within itself, the same as many other object oriented languages.
+
+
+
+
+----
+
+Create a file named `user.php`
+
+---
+```php
+class User {
+    private $first_name;
+    private $last_name;
+    private $gender;
+    public $age;
+    private $role = 'user';
+
+    public function setFiestName($first_name){
+        $this->first_name = $first_name;
+    }
+
+    public function getFirstName(){
+        return $this->first_name;
+    }
+
+    public function setLastName($last_name){
+        $this->last_name = $last_name;
+    }
+
+    public function getLastName(){
+        return $this->last_name;
+    }
+
+    public function setGender($gender){
+        $this->gender = $gender;
+    }
+
+    public function getGender(){
+        return $this->gender;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+}
+```
+---
+
+# Assigning values to properties
+
+Let's test the class we created. Create a file named 'test-user.php'
+the include or require the file containing the class `User`
+```php
+require_once(`user.php`);
+```
+
+```php
+$user = new User(); // instantiate the class User
+
+// setting values of private properties
+$user->setFirstName('John');
+
+// public property
+$user->age = 30;
+
+// Fatal error: Cannot access private property
+$user->last_name = 'Doe';
+
+// Correct way to assign values to protected and private methods
+$user->setLastName('Doe');
+
+```
+
+---
+
+# Fetching instance variables value
+
+```php
+echo $user->age;
+echo $user->getFirstName();
+
+// Fatal error: Cannot access private property
+echo $user->last_name;
+
+// You can make as many instance as you want
+$user2 = new User();
+$user3 = new User();
+
+```
+
+---
+
+## Constructor (`__construct`)
+a special type of function which will be called automatically whenever there is an object formation from a class.
+
+```php
+class User {
+    private $first_name;
+    private $last_name;
+    private $gender;
+    public $age;
+    private $role = 'user';
+
+    public function __construct($role) {
+        $this->role = $role;
+    }
+}
+```
+
+```php
+$user = new User('user');
+$admin = new User('admin');
+
+echo $user->getRole();
+echo $admin->getRole();
+
+```
+---
+
+# Class Constants
+
+ - Constants differ from normal variables in that you don't use the $ symbol to declare or use them.
+ - The default visibility of class constants is `public`.
+ - The value must be a constant expression, not (for example) a variable, a property, or a function call.
+
+```php
+class User {
+
+    private $first_name;
+
+    const MAX_AGE = 100;
+
+}
+```
+
+
+---
+
+# Static
+
+ - Declaring class properties or methods as static makes them accessible without needing an instantiation of the class.
+ - A property declared as static cannot be accessed with an instantiated class object (though a static method can).
+
+```php
+class User {
+
+    ...
+
+    public static function foo() {
+
+    }
+
+    ...
+
+}
+```
+
+---
+
+# How to access constants and static methods?
+
+## Scope Resolution Operator `(::)`
+
+```php
+User::MAX_AGE;
+User::foo();
+```
+
+---
+
+# Traits
+
+ - mechanism for code reuse in single inheritance languages such as PHP
+ - A Trait is similar to a class, but only intended to group functionality in a fine-grained and consistent way.
+ - It is not possible to instantiate a Trait on its own.
+
+```php
+trait Post {
+    public function setMessage($message) {
+        $this->message = $message;
+    }
+
+    public function getAuthor($author) {
+        $this->autor = $author;
+    }
+}
+```
+
+---
+
+```php
+class Comment {
+    use Post;
+}
+
+class Thread {
+    use Post;
+}
+
+$comment = new Comment();
+$comment->setMessage('Hello, world!'); // the object has method setMessage because of the trait Post
+```
+---
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
