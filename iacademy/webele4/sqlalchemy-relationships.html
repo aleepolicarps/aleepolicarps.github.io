@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relationships</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Flask-SQLAlchemy Relationships
+
+---
+
+# One to Many and Many to One
+
+*Example:*
+
+Let's define a relationship between a user and a post.
+ - A user can have many posts
+ - A post belongs to one user
+
+```python
+import flask_sqlalchemy
+from datetime import datetime
+
+db = flask_sqlalchemy.SQLAlchemy()
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+
+```
+
+---
+
+```python
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    # reference to user, nullable=False, must always belong to a user
+    # db.ForeignKey will automatically make a foreign key for this column
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('posts', lazy=True))
+```
+
+**Creating Objects**
+
+_ ex. Logged in user will create a post_
+
+```python
+    user_id = session['user_id']    # get logged in user id from session
+    user = User.query.get(user_id)  # fetch the user from the database
+
+    post = Post(title=request.form.get('title'), body=request.form.get('body'), user=user)
+
+    db.session.add(post)
+    db.session.commit()
+```
+
+---
+
+**Accessing Data**
+
+_ ex. Given a post, get the user's (poster) username _
+```python
+    post.user.username
+```
+
+----
+
+*`backref`* - establishes bidirectional connection between `User` and `Post`
+
+_ ex. Given a user, access all the posts written by that user _
+
+```python
+    user.posts```
+
+---
+
+# One to One
+
+A bidirectional relationship with a scalar attribute on both sides.
+
+```python
+class User(db.Model):
+    ...
+
+    profile_picture = db.relationship('ProfilePicture', uselist=False)
+
+class ProfilePicture(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', uselist=False)
+    url = db.Column(db.String, nullable=False)
+
+```
+
+_ By default, when you define a relationship via `db.relationship`, it will return a list. In one-to-one relationship, we don't really need a list hence the use of `uselist`_
+
+---
+
+**Accessing Data**
+
+In this example we have explicitly defined the relationship in class User and in class ProfilePicture. If you do this, you do not need to add backref to `db.relationship`
+
+_ ex. Access the URL of the profile picture of a user _
+```python
+    user.profile_picture.url
+```
+
+----
+
+_ ex. Access which username the profile picture belongs to _
+
+```python
+    profile_picture.user
+```
+
+---
+
+_ex. Create a new user with a new profile picture_
+
+```python
+user = User(username=request.form.get('username'),
+    email=request.form.get('email'),
+    password=request.form.get('password'))
+
+profile_picture = ProfilePicture(url=request.form.get('url'))
+user.profile_picture = profile_picture
+
+db.session.add(user)
+db.session.commit()
+
+```
+
+Notice here that we did not add `profile_picture` to the session. Since post is already part of the session, all objects associated with it through relationships will be added to the session.
+This can be done on either siden of the relationship, so a `User` can be created without adding it to the session when the `ProfilePicture` associated with it is added to the session.
+
+---
+
+# Many to Many
+
+For many-to-many relationships, you will need to define a helper table that is used to the relationship. The helper table should be just a table and not a model.
+
+<img src="https://aleepolicarps.github.io/iacademy/webele4/ERD.png" style="width:100%;">
+---
+
+```python
+post_tags = db.Table('post_tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
+)
+
+class Post(db.Model):
+    ...
+
+    tags = db.relationship('Tag', secondary=post_tags, lazy='subquery',
+        backref=db.backref('pages', lazy=True))
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+```
+
+---
+
+# Lazy and Eager Loading
+
+ - `'select'` / True (which is the default, but explicit is better than implicit) means that SQLAlchemy will load the data as necessary in one go using a standard select statement.
+ - `'joined'` / False tells SQLAlchemy to load the relationship in the same query as the parent using a JOIN statement.
+ - `'subquery'` works like 'joined' but instead SQLAlchemy will use a subquery.
+ - `'dynamic'` is special and can be useful if you have many items and always want to apply additional SQL filters to them.
+Instead of loading the items SQLAlchemy will return another query object which you can further refine before loading the items.
+Note that this cannot be turned into a different loading strategy when querying so it’s often a good idea to avoid using this in favor of lazy=True. A query object equivalent to a dynamic user.addresses relationship can be created using  -Address.query.with_parent(user) while still being able to use lazy or eager loading on the relationship itself as necessary.
+
+---
+
+_ex. Add new tags to a post_
+
+```python
+post = Post.query.filter_by(title="Philippine Stock Exchange elects new directors")
+new_tag = new Tag(name="news")
+post.tags.append(new_tag)
+
+db.session.commit()
+```
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
