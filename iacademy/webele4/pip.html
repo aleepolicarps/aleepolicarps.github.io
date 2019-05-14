@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PIP</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# PIP
+
+---
+
+# What is PIP?
+
+PIP is a package manage for Python packages. It is a comman line program added to your system to be able to install thrird party packages.
+
+`pip <pip arguments>`
+
+---
+
+## Installing Packages
+
+Pip supports installing from `PyPI` (https://pypi.org/), version control, local projects and directly from distribution files.
+
+To install the latest version of a package
+```bash
+pip install SomePackage
+```
+Install a specific version
+```bash
+pip install SomePackage==1.0.4
+```
+Install a minimum version
+```bash
+pip install SomePackage>=1.0.4
+```
+
+---
+
+## Requirement files
+
+These are files containing a list of items to be installed using pip install.
+
+```bash
+pip install -r requirements.txt
+```
+
+This is useful when working in a collaborative project and for deployment scripts. In a nutshell, this is just a list of pip install arguments.
+
+To get all the installed python packages type in `pip freeze` and to save the result to a file you type input
+```bash
+pip freeze > requirements.txt
+```
+
+---
+
+# Flask Mail
+
+Flask has a popular extension Flask-Mail that can make sending email very easy. To use this, installed the package using pip
+
+```bash
+pip install flask-mail
+```
+
+---
+
+## Flak Mail setup
+
+To use Flask Mail, you need to configure the following config keys on the standard Flask config API
+
+ - MAIL_SERVER : default ‘localhost’
+ - MAIL_PORT : default 25
+ - MAIL_USE_TLS : default False
+ - MAIL_USE_SSL : default False
+ - MAIL_DEBUG : default app.debug
+ - MAIL_USERNAME : default None
+ - MAIL_PASSWORD : default None
+ - MAIL_DEFAULT_SENDER : default None
+ - MAIL_MAX_EMAILS : default None
+ - MAIL_SUPPRESS_SEND : default app.testing
+ - MAIL_ASCII_ATTACHMENTS : default False
+
+---
+
+example: setting the mail server
+
+
+```python
+
+from flask import Flask
+from flask_mail import Mail
+
+app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'alee.policarpio@iacademy.edu.ph'
+app.config['MAIL_PASSWORD'] = 'password'
+app.config['MAIL_DEFAULT_SENDER'] = 'alee.policarpio@iacademy.edu.ph'
+
+mail = Mail(app)
+
+...
+```
+
+Like most Flask extensions, you need to create an instance right after the Flask application is created.
+
+---
+
+## Usage
+
+You can create helper functions to handle email sending
+
+e.g. app/email.py
+```python
+from flask_mail import Message
+from app import mail
+
+def send_email(subject, sender, recipients, text_body, html_body):
+    msg = Message(subject, sender=sender, recipients=recipients)
+    msg.body = text_body
+    msg.html = html_body
+    mail.send(msg)
+```
+
+---
+
+Use case: Welcome email
+
+```python
+
+from email import send_email
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    user = User(name=request.form.get('name'), password=request.form.get('password'), email=request.form.get('email'))
+    db.session.add(user)
+    db.session.commit()
+
+    message = 'Welcome to my forum'
+    send_email('Welcome', 'alee.policarpio@iacademy.edu.ph', [email=user.email], message, message)
+
+    return render_template('home.html', user=user)
+
+```
+---
+
+## Sending emails with HTML
+
+Flask Mail can send emails containing texts and/or HTML document. You can render jinja templates and send them as emails. Ideally, you will store all email templates in their own folder under `templates` folder.
+Email templates are no different from route templates, you can use inheritance if you want your own custom header and footer.
+
+e.g. templates/emails/comment_notification.html
+```html
+{% extends "email_base.html" %}
+{% block content %}
+<p>Dear {{post.user.name}},</p>
+<p>You have received a comment from {{ comment.user.name }} on your post. </p>
+<p>You can reply to the comment by clicking <a href="{{ url_for('post', id=post.id) }}">here.</a></p>
+{% block %}
+```
+
+---
+
+```python
+
+@app.route('/comment', method=['POST'])
+def submit_comment():
+    post = Post.query.get(request.form.get('post_id'))
+    comment = Comment(message=request.form.get('message'), post=post, user=session['user'])
+    db.session.commit()
+
+    message = render_template('emails/comment_notification', post=post, commenter=comment)
+    send_email('You received a comment', 'alee.policarpio@iacademy.edu.ph', [email=user.email], message, message)
+
+    return redirect(url_for('post', id=post.id))
+
+```
+
+---
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
