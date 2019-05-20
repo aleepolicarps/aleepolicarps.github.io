@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Composer</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+        td, td {padding: 0 10px;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Composer
+
+---
+
+- Dependency management in PHP
+- a way to pull in third party software
+
+---
+
+## Dependency Management
+
+example. You want to use Bootstrap
+
+#### Old way
+
+1. Search for Bootstrap
+2. Download the latest version
+3. Move to a folder inside your project
+
+What if you want to update to a newer version? What if you don't want to use this anymore?
+What if you are working in a group and are working with git?
+
+---
+
+Dependency Management solves these problems by automating and standardizing. The retrieval of dependencies can be done programmatically.
+
+---
+
+## Installing Composer
+
+```
+curl -sS https://getcomposer.org/installer | php
+```
+
+To install composer globally, run this command as well
+```
+mv composer.phar /usr/local/bin/composer
+```
+
+---
+
+There are two separate elements to dependency management with Composer. The first is `Composer` itself which is a command line tool for grabbing and managing dependencies. The second is `Packagist` - the main composer repository. This is where the packages you may want to use are stored.
+
+When using Composer the heart of your dependency management will be a single JSON file named `composer.json.`
+
+```json
+{
+    "name": "danielpataki/my_project",
+    "description": "My New Project",
+    "authors": [
+        {
+            "name": "Daniel Pataki",
+            "email": "mail@mymail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "1.12.0"
+    }
+}
+```
+---
+
+On the terminal, run `composer install`. This will download and install the dependencies into the project.
+
+`vendor` - This directory has been created by composer. This is the destination of all the installed dependencies.
+`composer.lock` - Snapshot of the current dependency tree and versions
+
+---
+
+# Locking
+
+Locking of dependencies is one of the most useful features of Compose. The lock file can make sure that everyone works with the same versions of files. Just because the application shouldn't break due to a component update doesn't mean that all your teammates and your production server should all be running separate versions.
+
+You can of course decide to update your dependencies. In this case you should run `composer update`.
+
+---
+
+# Adding More Requirements
+
+You can add more requirements by either
+ - running composer require on the terminal -- `composer require laravel`
+ - adding the package and the version on composer.json then run `composer install`
+
+---
+
+# Autoloading
+
+For libraries that specify autoload information, Composer generates a vendor/autoload.php file. You can simply include this file and start using the classes that those libraries provide without any extra work:
+
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$log = new Monolog\Logger('name');
+$log->pushHandler(new Monolog\Handler\StreamHandler('app.log', Monolog\Logger::WARNING));
+$log->addWarning('Foo');
+```
+You can even add your own code to the autoloader by adding an autoload field to composer.json.
+```json
+{
+    "autoload": {
+        "psr-4": {"Forum\\": "src/"}
+    }
+}
+```
+
+---
+
+#  Example: Twig
+
+1. Install twig: `composer require "twig/twig:^2.0"
+2. Create a file named index.html on a folder named templates
+
+```twig
+Hello, {{ name }}
+```
+
+3. Create a php file named hello.php
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+$loader = new \Twig\Loader\FilesystemLoader('/templates');
+$twig = new \Twig\Environment($loader, ['cache' => '/template_cache']);
+
+echo $twig->render('index.html', ['name' => 'Fabien']);
+```
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
