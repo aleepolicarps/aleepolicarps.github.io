@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>V. Iterations</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Iterations
+
+---
+
+# The `while` statement
+
+Computers are often used to automate repetitive tasks.
+
+Whe have seen the program `countdown` which is a recursion. A set of statements that are performed repetitively are called `iterations`.
+
+If we were to rewrite `countdown` using `while`, we will have the following code
+```Python
+def countdown(n):
+    while n > 0:
+        print(n)
+        n = n - 1
+    print('Blastoff')
+```
+
+You can almost read the while statement as if it were in English
+
+```
+While n is greater than 0, display the value of n and then reduce the value of n by 1.
+When you get to 0, display the word "Blastoff!".
+```
+
+---
+
+Here is the flow of execution for a `while` statement:
+
+1. Evaluate the condition, yielding `True` of `False`
+
+2. If the condition is false, exit the `while` statement and continue execution at the next statement
+
+3. If the condition is true, execute the body and then go back to step 1
+
+The body of the loop should change the value of one or more variables so that the condition eventually becomes false and the loop terminates. Otherwise, you will end up with an **infinite loop**.
+
+---
+
+# `break`
+
+Sometimes you don't know it's time to end a oop until you get halfway through the body. In that case, you can use the `break` statement to jump out of the loop.
+
+For example, suppose you want to take input from the user until they type `done`. You could write:
+
+```python
+while True:
+    line = input('> ')
+    if line == 'done':
+        break
+    print line
+
+print 'Done!'
+```
+
+----
+
+The loop  condition is `True`, which is always true, so the loop runs until it hits the break statement.
+
+---
+
+# `do while`
+
+There is no `do while` in Python. However, you can always emulate a `do while` behavior with just `while` and `break`
+
+
+---
+
+# `for`
+
+A `for` loop is used to iterate over a sequence that is either a list, tuple, dictionary, set or string.
+
+It is different from other programming languages `for` and is much more closer to `foreach` or other iterators.
+
+Example
+```Python
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)
+```
+
+The `for` loop does not require an indexing variable to set beforehand.
+
+---
+
+## Looping through strings
+
+```Python
+for x in "banana":
+    print(x)
+```
+---
+
+# `for` and `break`
+
+With the `break` statement we can stop the loop before it has looped through all the items:
+
+```Python
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)
+    if x == "banana":
+        break
+```
+
+---
+
+# `continue`
+
+With the `continue` statement we can stop the current iteration of the loop, and continue with the next.
+
+It is similar to the `break` statement but it does not really terminate the loop. It just stops executing other statements after it and moves on to the next loop.
+
+
+```Python
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    if x == "banana":
+        continue
+    print(x)
+```
+
+---
+
+# `range()`
+
+To loop through a set of code a specified number of times, we can use the `range()` function,
+
+The `range()` function returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and ends at a specified number.
+
+`range(start, stop, step)`
+
+start - Optional. An integer number specifying at which position to start. Default is 0
+
+stop - Optional. An integer number specifying at which **position** to end.
+
+step - Optional. An integer number specifying the incrementation. Default is 1
+
+---
+
+If only one argument is supplied, it is mapped to the `stop` parameter. Therefore `range(10)` will return a sequence of numbers from 0-9.
+
+In PHP, if we want to print the numbers from 0 - 9, we will do something like this
+```php
+for($i = 0; $i < 10; $i++) {
+    echo "{$i}\n";
+}
+```
+
+In Python,
+
+```Python
+for i in range(10):
+    print(i)
+```
+
+---
+
+# `else` for `for`
+
+The `else` keyword in a `for` loop specifies a block of code to be executed when the loop is finished:
+
+```Python
+for x in range(6):
+    print(x)
+else:
+    print("Finally finished!")
+```
+
+---
+
+# Nested Loops
+A nested loop is a loop inside a loop.
+
+The "inner loop" will be executed one time for each iteration of the "outer loop":
+
+```python
+adj = ["red", "big", "tasty"]
+fruits = ["apple", "banana", "cherry"]
+
+for x in adj:
+    for y in fruits:
+        print(x, y)
+```
+
+---
+
+class: center, middle
+
+# String Operations
+
+---
+
+# String methods
+
+A **method** is similar to a function -- it takes arguments and returns a value -- but the syntax is different.
+
+For example, the method `upper` takes a string and returns a new string with all uppercase letters:
+
+Instead of the function syntax `upper(word)`, it uses the method syntax `word.upper()`.
+
+```Python
+>>> word = 'banana'
+>>> new_word = word.upper()
+>>> print(new_word)
+BANANA
+```
+
+A method call is called an invocation; in this casem we would say that we are invoking `upper` on the `word`.
+
+
+Read the documentation of the string methods at https://docs.python.org/3/library/stdtypes.html#string-methods.
+
+---
+
+# The `in` operator
+
+The ‘in’ operator is used to check if a value exists in a sequence or not.
+
+The word `in` is a boolean operator that takes two strings and returns `True` if the first appears as a substring in the second:
+
+```Python
+>>> 'a' in `banana`
+True`
+>>> 'seed' in 'banana'
+False
+```
+
+It can also be used in lists, dict and sets.
+
+---
+
+# The `not in` operator
+
+Evaluates to true if it does not finds a variable in the specified sequence and false otherwise.
+
+```python
+x = 24
+y = 20
+list = [10, 20, 30, 40, 50 ];
+
+if ( x not in list ):
+   print "x is NOT present in given list"
+else:
+   print "x is  present in given list"
+
+if ( y in list ):
+   print "y is present in given list"
+else:
+   print "y is NOT present in given list"
+```
+
+---
+
+# Substring
+
+Python offers many ways to substring a string. It is often called ‘slicing’.
+
+It follows this template:
+
+```
+string[start: end: step]
+```
+
+Where,
+
+**start**: The starting index of the substring. The character at this index is included in the substring. If start is not included, it is assumed to equal to 0.
+
+**end**: The terminating index of the substring. The character at this index is NOT included in the substring. If end is not included, or if the specified value exceeds the string length, it is assumed to be equal to the length of the string by default.
+
+**step**: Every ‘step’ character after the current character to be included. The default value is 1. If the step value is omitted, it is assumed to equal to 1.
+
+---
+
+`string[start:end]`: Get all characters from index start to end-1
+
+`string[:end]`: Get all characters from the beginning of the string to end-1
+
+`string[start:]`: Get all characters from index start to the end of the string
+
+`string[start:end:step]`: Get all characters from start to end-1 discounting every step character
+
+----
+
+Example:
+Get the first 5 characters of a string
+
+```python
+>>> string = "freeCodeCamp"
+>>> print(string[0:5])
+freeC
+```
+
+---
+
+# Exercise
+
+Write a function that replaces a substring with a new string.
+
+Example:
+```python
+>>> replace('The quick brown fox jumps over the lazy dog', 'quick', 'slow')
+
+The slow brown fox jumps over the lazy dog
+```
+
+The first parameter is the string, second is the substring to be replaced and the third is the string to replace the substring.
+
+If there are more than one occurence of a substring, replace it all.
+
+
+
+---
+
+
+    </textarea>
+    <script src="assets/remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
