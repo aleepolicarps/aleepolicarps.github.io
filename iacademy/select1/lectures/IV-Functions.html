@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IV. Functions</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Functions
+
+---
+
+# What is a function?
+
+A ** function ** is a named sequence of statements that performs a computation.
+
+When you define a function, you specify the name and the sequence of statements and later "call" the function by name.
+
+example: `print` function
+
+```python
+>>> print('Hello, world!')
+Hello, world
+```
+
+---
+class: center, middle
+
+# Built-in Functions in Python
+
+---
+
+## Type conversion functions
+
+Python provides built-in functions that convert values from one type to another.
+
+### `int()`
+takes any value and converts it to an integer ** if it can **
+
+
+```python
+>>> x = '32'
+>>> int(x)
+32
+```
+
+```python
+>>> x = 'Hello'
+>>> int(x)
+ValueError: invalid literal for int(): Hello
+```
+
+---
+#### Float to integer via `int()`
+
+`int` can convert floating-point values to integers, however, it does not perform rounding off. It will just remove the decimal part
+
+```python
+>>> int(2.5)
+2
+
+>> int(-3.9999)
+-3
+```
+---
+### `float()`
+converts integers and strings to floating-point numbers ** if it can **
+
+```python
+>>> float(32)
+32.0
+
+>>> float('3.14158')
+3.14159
+```
+---
+
+### `str()`
+
+Converts its arguments to a string
+
+```python
+>>> str(32)
+'32'
+
+>>> str(3.14158)
+'3.14159'
+```
+---
+
+** Note **
+
+When passing a variable to a type conversion function, the value and type of the variable will not be changed.
+
+```python
+pi = 3.14
+str(pi)
+print(type(pi))
+```
+
+output: `<class 'float'>`
+
+
+*The value and type is converted through the function's return value.*
+---
+
+** module ** - a file that contains a collection of related functions and variables
+
+To access one of the functions, you have to specify the name of the module and the name of the function, separated by a dot (period). This format is called **dot notation**.
+
+---
+
+# Math functions
+
+Python has a math module that provides the most of the familiar mathematical functions. To be able to use them, we need to import the `math` module
+
+
+ex. Find the sine of radians
+```python
+>>> import math
+>>> radians = 0.7
+>>> height = math.sin(radians)
+```
+
+ex. Find the circumference given the radius
+```python
+>>> import math
+>>> radius = 5
+>>> circumference = 2 * math.pi * r
+```
+
+---
+
+# Function Composition
+
+One of the most useful features of programming languages is the ability to compose building blocks, For example, the argument of a function can also be another function call
+
+```python
+>>> x = math.exp(math.log(x + 1))
+```
+
+---
+# Adding new functions
+
+A *function definition* specifies the name of a new function and the sequence of statements that execute when the function is called.
+
+```python
+def print_lyrics():
+    print 'Twinkle, Twinkle little star'
+    print 'How i wonder what you are'
+```
+
+** `def` ** - a keyword that indicates that this is a function definition.
+
+** `print_lyrics` ** - the name of the function
+
+** parentheses / () ** - indicates that this function doesn't take any arguments
+
+The first line of the function definition is called the ** header **; the rest is called the **body**. The header has to end with a ** colon ** and the body has to be indented.
+
+---
+
+The syntax for calling new functiomn is the same as as for built-in functions:
+```python
+>>> print_lyrics()
+Twinkle, Twinkle little star
+How I wonder what you are
+```
+
+---
+
+# Flow of execution
+
+
+ - Execution always begins at the the first statement of the program. Statements are executed one at a time, in order from top to bottom.
+
+ - Function definitions to not alter the flow of execution of the program. * The statements inside the function are not executed until the function is called.
+
+ - Consider a function call like a * detour * in the flow of execution.
+
+---
+
+# Parameters and arguments
+
+Inside the function, the arguments are assigned to variabled called *parameters*.
+
+example
+```python
+def print_twice(bruce):
+    print bruce
+    print bruce
+```
+
+```python
+>>> print_twice('Spam')
+Spam
+Spam
+```
+
+---
+
+*Parameters and variabled created inside a function is __local__, which means that it only exists within the function*
+
+```python
+def cat_twice(part1, part2):
+    cat = part1 + part2
+    print_twice(cat)
+
+
+line1 = 'Bing tiddle'
+line2 = 'tiddle bang.'
+cat_twice(line1, line2)
+```
+
+When `cat_twice` terminates, the variable cat is destroyed. If we try to print it, we get an exception.
+
+---
+## Passing arguments
+
+```python
+import math
+def quadratic(a, b, c):
+    x1 = -b / (2*a)
+    x2 = math.sqrt(b**2 - 4*a*c) / (2*a)
+    return (x1 + x2), (x1 - x2)
+```
+
+When we call this function, we can pass each of our three arguments in two different ways.
+
+
+---
+
+### Unnamed
+
+```python
+>>> quadratic(31, 93, 62)
+```
+
+In this way, the order of the arguments matter.
+
+The position of the arguments, will be mapped to the function parameters positions.
+
+- 31 -> a
+
+- 93 -> b
+
+- 62 -> c
+
+Reordering the arguments, would give a different result.
+
+
+---
+### Named (keyword) Arguments
+
+```python
+>>> quadratic(a=31, b=93, c=62)
+```
+
+In this way, the order of arguments do not matter because the arguments are already mapped with the function parameter by name. Therefore
+
+```python
+>>> quadratic(c=62, a=31, b=93)
+>>> quadratic(a=31, c=62, b=93)
+>>> quadratic(a=31, b=93, c=62)
+```
+
+would give the same result
+
+---
+
+# Default arguments
+
+Python allows function arguments to have default values. The default value is assigned using `assignment(=)` operation of the form `parameter=value`
+
+```python
+def student (firstname, lastname='Mark', major='Computer Science'):
+    print(firstname, ' ', lastname, ' studies ', major)
+```
+
+You can call the function by only passing 1 argument, 2 argument or all of the 3 arguments.
+
+---
+
+# Fruitful functions and void functions
+
+Some of the functions we are using, such as the math functions, yield results (fruitful). Other functioms perform an action but don't return values (void).
+
+When you call a fruitful function in interactive mode, Python displays the result:
+```python
+>>> math.sqrt(4)
+2
+```
+
+In a script, if you call a fruitful function all by itsel, the return value is lost forever.
+
+
+*Void functions* might display something on the screen or have some other effect, but they don't have return value.
+
+If you stry to assign the result to a variable, you get a value `None`
+```python
+>>> result = print_twice('Bing')
+Bing
+Bing
+>>> print result
+None
+```
+
+---
+
+# Importing modules
+
+Python provides two ways to import modules; we have already seen one way:
+```python
+>>> import math
+```
+
+If you import `math`, you get a module object named `math`. The module object contains constant like `pi` and functions like `sin` and `exp`. But if you try to access `pi` directly, you get an error
+```Python
+>>> print(pi)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'pi' is not defined
+```
+
+As an alternative, you can import an object from a module like this:
+```python
+>>> from math import pi
+>>> print pi
+3.141592653589793
+```
+
+---
+
+If you want to import everything from the module:
+
+```Python
+>>> from math import *
+>>> cost(pi)
+```
+
+---
+
+# Recursion
+
+Is is completely legal for one function to call another and to also call itself.
+
+```Python
+def countdown(n):
+    if n <= 0:
+        print('Blastoff!')
+    else:
+        print n
+        countdown(n-1)
+```
+
+if n is 0 or negative, it outputs the word 'Blastoff!'. Otherw], it outputs n and then calls a function named countdown (itself) passing `n-1` as an argument.
+
+What happens if we call `countdown(3)`?
+
+---
+
+# Exercise
+
+Create a function that prints a pyramid whose height is defined by the argument.
+Example.
+```python
+>>> print_pyramid(3)
+   *
+  **
+ ****
+
+>>> print_pyramid(6)
+       *
+      **
+     ****
+    ******
+   ********
+  **********
+ ************
+```
+
+
+
+
+---
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
