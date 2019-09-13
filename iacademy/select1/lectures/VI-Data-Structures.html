@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VI. Data Structures</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Data Structures
+
+
+### List, Dictionary and Tuple
+---
+
+# Lists
+
+### A list is a ** sequence ** of values.
+
+If a string is a sequence of characters, a list is a sequence of ** ANY ** type.
+These values are called ** elements ** or ** items **.
+
+---
+
+## Creating a list
+
+To create a list, simple enclose the elements in square brackets (`[]`) and separate the items with a comma (`,`).
+
+e. g.
+
+```Python
+>>> x = [10, 20, 30, 40]
+>>> y = ['apple', 'orange', 'mango']
+```
+
+The list `x` is a list of integers while list `y` is a list of strings.
+
+---
+
+## The elements do not have to be the same type
+
+A list can contain any type and a combination of these types
+
+
+```python
+>>> mixed_list = ['spam', 2.0, 5, [10, 20]]
+```
+
+`mixed_list` contains a string, float, integer and another list. This it is a ** nested ** list.
+
+---
+
+## Lists are mutable
+
+The syntax for accessing the elements of a list is the same with string, using square brackets.
+
+```python
+>>> x = [10, 20, 30, 40]
+>>> print(x[0])
+
+10
+```
+
+You can reasssign the value of an element by simply using the assignment operator
+
+```Python
+>>> x[1] = 5
+>>> print(x)
+
+[10, 5, 30, 40]
+```
+
+---
+
+## Indices for lists
+
+ - Any integer expression can be used as an index
+
+ - If you try to read or write an elemets that does not exist, you get an `IndexError`
+
+ - If an index has a negative value, it counts backward from the end of the list
+
+
+```python
+>>> cheeses = ['Cheedar', 'Gouda', 'Parmesan']
+>>> print(cheeses[-1])
+Parmesan
+
+>>> print(cheeses[5])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+```
+
+`in` operator also works on lists and is used to check for membership.
+
+```Python
+>>> 'Brie' in cheese
+False
+```
+---
+
+# Traversing a list
+
+The most common way to traverse a list is with a `for` loop. The systax is the same as for strings
+
+```Python
+for cheese in cheeses:
+    print(cheese)
+```
+
+However, if you want to write or update the elements, you need the indices and this form of for loops does not worl. A common way to do that
+is to combine the functions `range` and `len`.
+
+```python
+for i in range(len(numbers)):
+    numbers[i] = numbers[i] * 2
+```
+
+---
+
+#### Note
+
+1. A `for` loop over an empty list never executes the body
+
+```python
+for x in []:
+    print('This never happens.')
+```
+
+
+2. A list contained in an another list still counts as a single element. Thus, the array below is of length 4
+
+```python
+['spam', 1, ['Brie', 'Pecorino'], [1, 2, 3]]
+```
+
+---
+## List Operations
+
+### `+` - concatenates lists
+```Python
+>>> a = [1, 2, 3]
+>>> b = [4, 5, 6]
+>>> c = a + b
+>>> print(c)
+[1,2, 3, 4, 5, 6]
+```
+
+### '*' - repeats a list given the number of time
+```python
+>>> print([0] * 4)
+[0, 0, 0, 0]
+
+>>> [1, 2, 3] * 3
+[1, 2, 3, 1, 2, 3, 1 ,2, 3]
+```
+---
+
+## List slices
+
+The slice operator also works on lists
+
+```Python
+>>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+>>> t[1:3]
+['b', 'c']
+
+>>> t[:4]
+['a', 'b', 'c', 'd']
+
+>>> t[3:]
+['d', 'e', 'f']
+```
+
+If you omit the first index in the slice operator, the slice starts at the beginning. If you omit the second, the slide goes to the end. Therefore, if you omit both,
+the slice is a **copy** of the whole list.
+
+```Python
+>>> t[:]
+['a', 'b', 'c', 'd', 'e', 'f']
+```
+
+Since lists are mutable, it is often useful to make a copy/clone before performing operations and a slice operations with just `:` will do the trick.
+
+---
+
+## List methods
+
+### append
+```Python
+>>> t = ['a', 'b', 'c']
+>>> t.append('d')
+>>> print t
+['a', 'b', 'c', 'd']
+```
+
+### sort
+```python
+>>> t = ['d', 'e', 'c', 'b', 'a']
+>>> t.sort()
+>>> print(t)
+['a', 'b', 'c', 'd', 'e']
+```
+---
+
+### extend
+
+extend takes a list as an argument and appends all of the elements
+
+```python
+>>> t1 = ['a', 'b', 'c']
+>>> t2 = ['d', 'e']
+>>> t1.extend(t2)
+>>> print(t1)
+['a', 'b', 'c', 'd', 'e']
+```
+---
+
+## Deleting elements
+
+There are several ways to delete elements from a list. If you know the index of the element, you can use `pop`
+
+```python
+>>> t = ['a', 'b', 'c']
+>>> x = t.pop(1)
+>>> print(t)
+['a', 'c']
+>>> print(x)
+b
+```
+
+`pop` modifies the list and returns the elements that was removed. If you do not provide an index, it deletes and returns the last element.
+
+If you do not need the returned valu, you can use the `del` operator:
+```Python
+>>> t = ['a', 'b', 'c']
+>>> del t[1]
+>>> print(t)
+['a', 'c']
+```
+
+---
+
+You can also use del and slice index to remove more than one element.
+```python
+>>> del [:1]
+>>> print(t)
+['c']
+```
+
+
+If you know the value of the element you want to remove but not the index, you can use `remove` method
+```Python
+>>> t = ['a', 'b', 'c']
+>>> t.remove('b')
+>>> print(t)
+['a', 'c']
+```
+
+---
+
+# List vs String
+
+
+A string is a squence of characters and a list is a sequence of values, but a list of characters is not the same as a string.
+
+```python
+>>> s = 'spam'
+>>> t = ['s', 'p', 'a', 'm']
+>>> s == t
+False
+```
+
+If you want to convert a string to a list of characters, you can use the function `list`
+```python
+>>> s = 'spam'
+>>> t = list(s)
+>>> print(t)
+['s', 'p', 'a', 'm']
+```
+
+---
+
+**Note**
+Note that `list` functiom breaks a string into individual letters. If you want to break a string into words, you can use the `split method`
+
+```python
+>>> s = 'whenever i see girls and boys'
+>>> t = s.split()
+>>> print(t)
+['whenever', 'i', 'see', 'girls', 'and', 'boys']
+```
+
+---
+
+# Objects and values
+
+If we execute these assignment statements:
+```python
+a = 'banana'
+b = 'banana'
+```
+
+We know that a and b refer to a string but we do not know whether they refer to the **same** string. There are two possible states -- a and b refer
+to two different objects that have the same value or they refer to the same object.
+
+To check whether two variables refer to the same object, you can use the `is` operator.
+
+```python
+>>> a = 'banana'
+>>> b = 'banana'
+>> a is b
+True
+```
+
+In this example, Python only created one string object and both a and b refer to it.
+
+---
+
+But when you create two lists, you get two different Objects
+
+```python
+>>> a  = [1, 2, 3]
+>>> b = [1, 2, 3]
+>>> a is b
+False
+```
+
+---
+
+# List arguments
+
+When you pass a list to a function, the function gets a reference to the list. If the function modifies a list parameter, the caller sees the change.
+
+```Python
+def delete_head(t):
+  del t[0]
+
+letters = ['a', 'b', 'c']
+print(letters)
+delete_head(letters)
+print(letters)
+```
+
+The outoput of the script above is
+```
+['a', 'b', 'c']
+['a', 'b']
+```
+
+---
+
+Excercise
+
+Write a function called `is_sorted` that takes a list as a parameter and return True or False if the list is is_sorted in ascending order and False otherwise.
+You can assume (as a precondition) that the elements can be compared with `<`, `>`, `=`, etc.
+
+
+For example, `is_sorted([1, 2, 2])` should return True and `is_sorted(['b', 'a'])` should return False
+
+---
+
+# Dictionaries
+
+A dictionary is like a list, but more general. In a list, the indices have to be integest; in a dictionary they can be (almost) of any type.
+
+
+You can think of a dictionary as a mapping between a set of indices (called **keys**) and a set of values.
+
+The squiggly-brackets `{}` are  used to declare a dictionary.
+
+```python
+>>> eng2sp = {'one': 'uno', 'two': 'dos'}
+```
+
+To add items to the dictionary, you can used square brackets
+```python
+>>> eng2sp['three'] = 'tres'
+```
+
+---
+
+If you try to output `eng2sp`, you will notice that the order is different
+```python
+>>> print eng2sp
+{'one': 'uno', 'three': 'trest', 'two': 'dos'}
+```
+
+The order items in a dictionary is unpredictable.
+
+---
+
+Similar to lists and strings, you can access the values using square brackets. If the key is not in the dictionary, you will get an exception
+
+```python
+>>> print(eng2sp['four'])
+KeyError: 'four'
+```
+
+### `len`
+the function workd on dictionaries; it returns the number of key-value pairs:
+```python
+>>> len(eng2sp)
+3
+```
+
+---
+
+### `in`
+The in operator tells you whether something appears as a key in the dictionary.
+
+```Python
+>>> `one` in eng2sp
+True
+>>> 'uno' in eng2sp
+False
+```
+
+To see whether something appears as a value in a dictionary, you can use the method values, which returns the values as a list.
+
+```Python
+>>> 'uno' in eng2sp.values()
+True
+```
+
+---
+# Looping and dictionaries
+
+If you use a dictionary in `for` statement, it traverses the keys of the dictionary. For example, `print_hist` prints each key and corresponding value:
+
+```python
+def print_hist(h):
+    for c in h:
+        print c, h[c]
+```
+
+The output would be
+
+```python
+>>> print_hist({'a': 2, 'b': 4, 'c': 9 )
+
+a 2
+b 4
+c 9
+```
+
+---
+
+# Tuples
+
+A ** tuple ** is sequence of values. The values can be any type and they are indexed by integers like lists. The important difference is that tuples are ** immutable **.
+
+Syntactically, a tuple is just a comma-separated list of values.
+
+```Python
+>>> t = 'a', 'b', 'c', 'd', 'd'
+```
+---
+
+### Single element tuple
+
+```python
+>>> t1 = 'a'
+>>> t2 = 'a',
+```
+
+
+To create a tuple with a single element, you have to include a finall comma
+
+---
+# `tuple()`
+
+`tuple()` fumction is also another way to declare a tuple
+```Python
+t0 = tuple() # empty tuple
+```
+
+If the argument is a string, list or another tuple, the result is a tuple with the elements of the argument
+
+```python
+>>> t = tuple('string')
+>>> print(t)
+
+('s', 't', 'r', 'i', 'n', 'g')
+```
+
+---
+# Variable values swapping
+
+traditionally, if we want to swap the values of variables `a` and `b`, we do
+
+```python
+>>> temp = a
+>>> a = b
+>>> b = a
+```
+
+With **tuple** asignment, it is more elegant
+
+```python
+>>> a, b = b, a
+```
+
+The number of variables on the left and the number of values on the right have to be the same or you'll get
+
+`ValueError: too many values to unpack`
+
+---
+
+# Tuples as return values
+
+We all know that a function can only return one value but if the value is a tuple, it is like returning multiple values.
+
+`divmod` is a built-in function that takes 2 arguments and returns a tuple of two values, the quotient and the remainder.
+
+```python
+>>> t = divmod(7, 3)
+>>> print(t)
+(2, 1)
+```
+
+```python
+>>> quot, rem = divmod(7, 3)
+>>> quot
+2
+>>> rem
+1
+```
+
+---
+
+
+      </textarea>
+    <script src="assets/remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
