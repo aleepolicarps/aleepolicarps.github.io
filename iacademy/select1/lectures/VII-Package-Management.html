@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VII. Package Management</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Package Management
+
+---
+
+# Modulues and Packages
+
+In programming, a module is a piece of software that has a specific functionality. For example, when building a ping pong game, one module would be responsible for the game logic, and
+another module would be responsible for drawing the game on the screen. Each module is a different file, which can be edited separately.
+
+
+---
+## Writing modules
+
+Modules in Python are simply Python files with a .py extension. The name of the module will be the name of the file. A Python module can have a set of functions, classes or variables defined and implemented.
+
+Example
+
+```
+mygame
+mygame/game.py
+mygame/draw.py
+```
+
+---
+
+## Importing modules
+
+Modules are imported from other modules using the import command. In this example, the game.py script may look something like this:
+
+```Python
+# game.py
+# import the draw module
+import draw
+
+def play_game():
+    ...
+
+def main():
+    result = play_game()
+    draw.draw_game(result)
+
+# this means that if this script is executed, then
+# main() will be executed
+if __name__ == '__main__':
+    main()
+```
+
+
+---
+```python
+# draw.py
+
+def draw_game():
+    ...
+
+def clear_screen(screen):
+    ...
+```
+
+The Python script game.py will implement the game. It will use the function `draw_game` from the file draw.py, or in other words, the draw module, that implements the logic for drawing the game on the screen.
+
+In this example, the game module imports the draw module, which enables it to use functions implemented in that module.
+
+To use the function `draw_game` from the `draw` module, we would need to specify in which module the function is implemented, using the **dot** operator. To reference the `draw_game` function from the `game` module, we would need to import the `draw` module and only then call `draw.draw_game()`.
+
+---
+
+When the import `draw` directive will run, the Python interpreter will look for a file in the directory which the script was executed from, by the name of the module with a `.py` prefix, so in our case it will try to look for `draw.py`. If it will find one, it will import it. If not, he will continue to look for built-in modules.
+
+---
+
+#Importing module objects to the current namespace
+
+We may also import the function `draw_game` directly into the main script's namespace, by using the `from` command.
+
+```Python
+# game.py
+# import the draw module
+from draw import draw_game
+
+def main():
+    result = play_game()
+    draw_game(result)
+```
+
+You may have noticed that in this example, draw_game does not precede with the name of the module it is imported from, because we've specified the module name in the import command.
+
+---
+# Importing all objects from a module
+
+We may also use the `import *` command to import all objects from a specific module, like this:
+
+```Python
+# game.py
+# import the draw module
+from draw import *
+
+def main():
+    result = play_game()
+    draw_game(result)
+```
+
+This might be a bit risky as changes in the module might affect the module which imports it, but it is shorter and also does not require you to specify which objects you wish to import from the module.
+
+---
+# Custom import name
+
+We may also load modules under any name we want. This is useful when we want to import a module conditionally to use the same name in the rest of the code.
+
+For example, if you have two `draw` modules with slighty different names - you may do the following:
+
+```python
+# game.py
+# import the draw module
+if visual_mode:
+    # in visual mode, we draw using graphics
+    import draw_visual as draw
+else:
+    # in textual mode, we print out text
+    import draw_textual as draw
+
+def main():
+    result = play_game()
+    # this can either be visual or textual depending on visual_mode
+    draw.draw_game(result)
+```
+---
+# Module initialization
+
+The first time a module is loaded into a running Python script, it is initialized by executing the code in the module once. If another module in your code imports the same module again, it will not be loaded twice but once only - so local variables inside the module act as a "singleton" - they are initialized only once.
+
+This is useful to know, because this means that you can rely on this behavior for initializing objects. For example:
+
+
+```Python
+# draw.py
+
+def draw_game():
+    # when clearing the screen we can use the main screen object initialized in this module
+    clear_screen(main_screen)
+    ...
+
+def clear_screen(screen):
+    ...
+
+class Screen():
+    ...
+
+# initialize main_screen as a singleton
+main_screen = Screen()
+```
+
+---
+
+# Writing packages
+
+Packages are namespaces which contain multiple modules and packages themselves. They are simply directories, but with a twist.
+
+
+Each package in Python is a directory which MUST contain a special file called `__init__.py`. This file can be empty, and it indicates that the directory it contains is a Python package, so it can be imported the same way a module can be imported.
+
+If we create a directory called `foo`, which marks the package name, we can then create a module inside that package called `bar`. We also must not forget to add the `__init__.py` file inside the `foo` directory.
+
+```Python
+import foo.bar
+```
+
+or
+
+```Python
+from foo import bar
+```
+
+---
+
+# `__init__.py`
+
+The `__init__.py` file can also decide which modules the package exports as the API, while keeping other modules internal, by overriding the `__all__` variable, like so:
+
+```python
+# __init__.py
+
+__all__ = ["bar"]
+```
+
+---
+
+class: center, middle
+
+# PIP
+
+---
+
+** pip ** is the package installer for Python. You can use pip to install packages from the Python Package Index and other indexes.
+
+
+
+To install pip: https://pip.pypa.io/en/stable/installing/
+
+---
+
+# pip usage
+
+Install a package from PyPI:
+
+```
+$ pip install SomePackage
+[...]
+Successfully installed SomePackage
+```
+
+---
+
+Show what files were installed:
+
+```
+$ pip show --files SomePackage
+Name: SomePackage
+Version: 1.0
+Location: /my/env/lib/pythonx.x/site-packages
+Files:
+  ../somepackage/__init__.py
+  [...]
+```
+
+---
+
+Upgrade a package:
+
+```python
+$ pip install --upgrade SomePackage
+[...]
+Found existing installation: SomePackage 1.0
+Uninstalling SomePackage:
+  Successfully uninstalled SomePackage
+Running setup.py install for SomePackage
+Successfully installed SomePackage
+```
+---
+Uninstall a package:
+
+```python
+$ pip uninstall SomePackage
+Uninstalling SomePackage:
+  /my/env/lib/pythonx.x/site-packages/somepackage
+Proceed (y/n)? y
+Successfully uninstalled SomePackage
+```
+---
+# Pip Freeze
+
+Pip, in addition to downloading and installing packages from the PyPi repository, can generate a requirements.txt file with this command:
+
+```
+$ pip freeze > requirements.txt
+```
+
+This allows us to maintain a list of installed pip packages useful to our projects.
+
+---
+
+If you want to reinstall these packages or maybe install them on another computer, you just need to run the command
+
+```
+pip install -r requirements.txt
+```
+
+This will install all the packages listed in the requirements.txt.
+
+
+---
+
+class: center, middle
+
+# File Management
+
+---
+
+# Persistence
+
+Most of the programs we have seen so far are transient in the sense that they run for a short time and produce some output, but when they end, their data disappears. If you run the program again, it starts with a clean slate.
+
+One of the simplest ways for programs to maintain their data is by reading and writing text files. We have already seen programs that read text files; in this chapter we will see programs that write them.
+
+---
+
+# Reading
+
+The built-in function `open` takes the name of the file as a parameter and returns a file object you can use to read the file.
+
+```python
+>>> fin = open('words.txt')
+>>> print(fin)
+
+<_io.TextIOWrapper name='words.txt' mode='r' encoding='UTF-8'>
+```
+
+`fin` is a common name for a file object used for input. Mode 'r' indicates that this file is open for ** reading **.
+
+---
+
+The file object provides several methods for reading, including `readline`, which reads characters from the file until it gets to a newline and returns the result as a string:
+```python
+>>> fin.readline()
+
+'aa\r\n'
+```
+
+
+The first word in this particular list is "aa", which is a kind of lava. The sequence `\r\n` represents two whitespace characters, a carriage return and a newline, that separate this word from the next.
+
+The file object keeps track of where it is in the filo, so if you call `readline` again, you get the next word.
+
+---
+
+You can also use a file object as part of a `for` loop. This program reads `words.txt` and prints each word, one per line:
+
+```python
+fin = open('words.txt')
+for line in fin:
+    word = line.strip()
+    print(word)
+```
+---
+# Writing
+
+To write a file, you have to open it with a mode 'w' as a second parameter.
+
+```python
+>>> fout = open('output.txt', 'w')
+>>> print(fout)
+
+<_io.TextIOWrapper name='output.txt' mode='w' encoding='UTF-8'>
+```
+
+If the file already exists, opening it in write mode clears out the old data and starts fresh, so be careful! If the file doesn't exist, a new one is created.
+
+---
+
+## `write` method
+
+The `write` method puts data into the file.
+
+```python
+>>> line1 = "Let's sing merry christmas"
+>>> fout.write(line1)
+```
+
+---
+
+Again, the file onbject keeps track of where it is, so if you call `write` again, it adds the new data to the end.
+
+```python
+>>> line2 = "and a happy holiday"
+>>> fout.write(line2)
+```
+
+When you are done writing, you have to close the file.
+
+```python
+>>> fout.close()
+```
+---
+# Format Operator
+
+The argument of `write` has to be a string, so if we want to put other values in a file, we have to convert them to strings.
+
+The easiest way is to use `str` function.
+
+An alternative is to use the **format operator**, `%`. When applied to integers, `%` is the modukes operator. But when the first operant is string, `%` is the format operator.
+
+---
+
+The first operand is the **format string**, which contains one or more **format sequences**, which specify how the second operand is formatted. The result is a string.
+
+For example, the format sequence `'%d'` mean that the second operand should be formatted as an integer (d stands for "decimal").
+
+```python
+>>> camels = 42
+>>> '%d' % camels
+'42'
+```
+
+The result is the string '42', which is not to be confused with the integer value '42'.
+---
+
+A format sequence can appear anywhere in the string, so you can embed a value in a sentence:
+
+```python
+>>> camels = 42
+>>> 'I have spotted %d camels.' % camels
+
+'I have spotted 42 camels'
+```
+
+---
+
+If there is more than one format sequence in the string, the second argyment has to be a tuple. Each format sequence is matched with an elemet of the tuple in order.
+
+The following examples uses '%d' to format an integer, '%g' to format a floating-point number and '%s' to format a string:
+
+```python
+>>> 'In %d years I have spotted %g %d.' % (3, 0.1, 'camels')
+
+'In 3 years I have spotted 0.1 camels.'
+```
+
+---
+
+The number of elements in the tuple has to match the number of format sequences in the string. Also, the types of the elements have to match the format sequences:
+
+```python
+>>> '%d %d %d %d' % (1, 2)
+TypeError: not enough arguments for format string
+```
+
+```python
+>>> '%d' % 'dollars'
+TypeError: illegal argument type for built-in operation
+```
+
+---
+
+# Filenames and paths
+
+Files are organized into **directories** (also called "folders"). Every running program has a "current directory" which is the default directory for most operations. For example, when you open a file for reading, Python looks for it in the current directory.
+
+The `os` module provides functions for working with files and directories.
+
+```python
+>>> import os
+>>> cwd = os.getcwd()
+>>> print(cws)
+
+/home/dinsdale
+```
+
+
+`cwd` stand for "current working directory". The result in this example is `/home/dinsdale`, which is the home directory of a user named 'dinsdale'.
+---
+
+A string like `cwd` that identifies a file is called a **path**. A **relative path** starts from the current directory; an **absolute path** starts from the topmost directory in the file system.
+
+```python
+>>> os.path.abspath('memo.txt')
+
+'/home/dinsdale/memo.txt'
+```
+
+`os.path.abspath` - find the absolute path of a file
+
+`os.path.exists` - checks whether a file or directory exists
+
+`os.path.isdir` - checks whether it's a directory
+
+---
+
+`os.listdir` returns a list of the files (and other directories) in the given directory:
+```python
+>>> os.listdir(cwd)
+
+['music', 'photos', 'memo.txt']
+```
+
+---
+
+# Catching Exceptions
+
+A lot of thisng can go wrong when you tru to read and write files. If you try to open a file that doesn't exist, you get and `IOError`:
+
+```python
+>>> fin = open('bad_file')
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: 'bad_file'
+```
+---
+
+If you do not have permission to access a file
+
+
+```python
+>>> fout = open('password.txt', 'w')
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+PermissionError: [Errno 13] Permission denied: 'password.txt'
+```
+
+---
+
+If you try to open a directory for reading
+
+```python
+>>> fin = open('iacademy')
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IsADirectoryError: [Errno 21] Is a directory: 'iacademy'
+```
+---
+
+To avoid these errors, you could use fucntions like `os.path.exists` and `os.path.isfile` but it would take a lot of time and code to check all the possibilities.
+
+It is better to go ahread and try and deal with the problems if they happen -- which is exactly what the `try` statement does.
+
+The syntax is similar to an `if` statement.
+
+```python
+try:
+    fin = open('bad_file')
+    for line in fin:
+        print(line)
+    fin.close()
+ecxept:
+    print('Something went wrong')
+```
+---
+
+Python starts by executing the try clause. If all goes well, it skips the `except` clause and proceeds. If an exception occurs, it jumps out of the `try` clause and executes the `except` clause.
+
+---
+
+# Excercise - Scraping
+
+The `urllib` module provides methods for manipulating URLs and downloading information from the web. The following example downloads and prints a secret message from `thinkpython.com`:
+
+```python
+import urllib
+
+conn = urllib.urlopen('https://thinkpython.com/secret.html')
+for line in conn:
+    print(line.strip())
+```
+
+Scrape any URL you want using `urllib` and store the top 10 most mentioned words in descending order in a file. Only consider words that are alphabetic.
+
+Note: For simplicity, you can choose a website with no HTML tags (e.g. https://raw.githubusercontent.com/mxw/grmr/master/src/finaltests/bible.txt) but if you happen to choose a website with HTML tags, remove the tags from the list of words to count.
+
+
+---
+      </textarea>
+    <script src="assets/remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
