@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VII. Classes</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Classes and objects
+
+---
+
+# User-defined types
+
+We have used many of Python's built-in types; now we are going to define a new type. As an example, we will create a type called `Point`
+that represents a point in 2-D space.
+
+
+In mathematical notations, points are often written in parentheses with a comma separating the coordinayes. For example `(0, 0)` represent the origin,
+and `(x, y)` representsthe point x units to the right and y units up the origin.
+
+
+---
+
+In Python, there are several ways to represent a point
+
+ - We could store the corrdinates separately in 2 variables, x & y
+
+ - We could store the corrdinates as elements in a list or tuple
+
+ - We could create a new type to represent points as **objects**
+
+---
+
+Creating a new type is more complicated than the other options, but it has advantages.
+
+A user-defined type is also called a **class**. A class definition looks like this:
+
+
+```python
+class Point(object):
+    # represents a point in 2-D space
+```
+
+The header indicated that the new class in a `Point`, which is a kind of `object`, which is a built-in type.
+
+---
+
+```python
+>>> print(Point)
+<class '__main__.Point'>
+```
+
+Because `Point` is defined at the top level, its "full name" is `__main__.Point`.
+
+---
+
+The class object is like a factory for creating objects. To create a Point, you call `Point` as if it were a function.
+
+```python
+>>> blank = Point()
+>>> print(blank)
+
+<__main__.Point instance at 0x7be93ac>
+```
+
+The return value is areference to a Point object, which we assign to `blank`. Creating a new object is called **instantiation**,
+and the objects in and **instance** of the class.
+
+
+When you print an instance, Python tells you whay class it belonhs to and where it is stored in memory.
+
+---
+
+# Attributes
+
+You can assign values to an instance using dot notation:
+
+```python
+>>> blank.x = 3.0
+>>> blank.y = 4.0
+```
+
+This syntax is similar to the syntax for selecting a variable from a module such as `math.pi`. We are assigning values to named elements
+of an object and these elements are called ** attributes**.
+
+---
+
+The variable `blank` refers to a Point object, which contains two attribites. Each attribute refers to a floating-point number.
+
+You can read the value of an attribute using the same syntax:
+
+```python
+>>> print(blank.y)
+4.0
+>>> print(blank.x)
+3.0
+```
+
+The expression `blank.x` means "Go to the object blank refers to and get the value of x.". In this case,
+we assigned that value to a variable named x.
+
+---
+
+You can use the dot notation in any expression
+
+```python
+>>> print('(%g, %g')' % (blank.x, blank.y))
+(3.0, 4.0)
+
+>>> distance = math.sqrt(blanl.x**2 + blank.y**2)
+>>> print(distance)
+5.0
+```
+
+---
+You can pass instacne as an agrument in the usual way
+
+```python
+def print_point(p):
+  print('(%g, %g')' % (p.x, p.y))
+```
+
+to invoke it
+```python
+print_point(blank)
+```
+---
+
+## Excercise (+2 on finals)
+
+Write a function called `distance_between_points` that takes 2 point objects as arguments and returns the distance between them.
+
+---
+
+# Rectangles
+
+Imagine you are designing a class to represent rectangles. What attribites would you use to specify the location an size of a rectangle?
+You can ignore angle; to keep things simple, assume that the rectangle is either vertical or horizontal.
+
+
+There are at least 2 possibilities
+ - you could specify one corner of the rectangle (or the center), the widthe and the height
+
+ - you could specify 2 oppossing corners
+
+---
+
+At this point, it is hard to say whether either is better than the other so we'll implemet the first one.
+
+```python
+class Rectangle(object):
+  """Represents a rectangle
+
+  attributes: width, height, corner
+  """
+```
+---
+To represent a rectangle, you have to instantiate a Rectangle object and assign values to the attributes
+
+```python
+box = Rectangle()
+box.width = 100
+box.height = 200
+
+box.corner = Point()
+box.corner.x = 0
+box.corner.y = 0
+```
+---
+
+# Instance as return values
+
+Functions can return instances. For example, `find_center` takes a `Rectangle` as n argument
+and returns a `Point` that contains the coordinates of the center of the `Rectangle`.
+
+```python
+def find_center(rect):
+  p = Point()
+  p.x = rect.corner.x + rect.width / 2.0
+  p.y = rect.corner.y + rect.height / 2.0
+```
+
+---
+
+# Objects are mutable
+
+You can change th state of an object by making an assignment to one of its attributes. For example, to change the size of a reactangle without changing its position
+
+```python
+box.width = box.width + 50
+box.height = box.height + 100
+```
+
+You can also write functions that modify objects. For example, `grow_rectangle` takes a Rectangle object and 2 numbers, dwidth and dheight and adds the numbers to the width and height of the rectangle
+
+```Python
+def grow_rectangle(rect, dwidth, dheight):
+  rect.width += dwidth
+  rect.height += dheight
+```
+---
+# Copying
+
+Aliasing can make a program difficult to read because changes in one place might have unexpected effects in another place. It is hard to keep track of all the variable that might refer to a given object.
+
+
+Copying in a alternative to aliasing. The `copy` module contains a function called `copy` that can duplicate any object
+
+```python
+p1 = Point()
+p1.x = 3.0
+p1.y = 4.0
+
+import copy
+p2 = copy.copy(p1)
+```
+
+p1 and p2 contain the same data, but they are not the same Point.
+
+---
+
+class: center, middle
+
+# Classes and Methods
+---
+
+# Object-oriented features
+
+Python is an **object-oriented programming language**, which means that it provides features that support OOP.
+
+OOP:
+ - Made up of object definitions and function definitions and most of the computation is expressed in terms of operations on objects
+
+ - Each object definition corresponds to some object or concept in the real world.
+
+---
+# Methods
+
+A method is a function that is associated with a particular class.
+
+Methods a semantically the same as functions but there are 2 syntactic differences:
+
+ - methods a defined inside a class definition
+ - the syntax for invoking a methos is different
+
+---
+
+By convension, the first parameter of a methos is called `self`.
+
+```python
+class Time(object):
+
+  def is_after(self, other):
+    return self.time_to_int() > other.time_to_int()
+```
+
+To use this method, you have to invoke it on one object and pass the other as an argument:
+```python
+>>> end.is_after(start)
+True
+```
+---
+
+# The `__init__` method
+
+
+The init method is a special method that gets invoked when an objecct is instantiated. ANd init method for a class `Time` might look like this:
+
+```python
+class Time(object):
+
+  def __init__(self, hour=0, minute=0, second=0):
+    self.hour = hour
+    self.minute = minute
+    self.second = second
+
+```
+It is common for the parameters of `__init__` to have the same names as the attributes.
+The statement `self.hour = hour` stores the value of the parameter `hour` as an attribute to `self`.
+
+*The  parameters are optional*
+
+---
+
+# The `__str__` method
+
+`__str__` is a special method like `__init__`, that is supposed to return a string representation of an object
+
+```Python
+# inside class Time
+
+  def __str__(self):
+    return '%.2d:%.2d:%.2d' % (self.hour, self.minute, self.second)
+```
+
+When you print an object, the method str is invoked
+
+```python
+>>> time = Time(9, 45)
+>>> print(time)
+09:45:00
+```
+
+---
+
+# Operator overloading
+
+By defining other special methods, you can specify the behavior of operators on user-defined types. For examplem if you define a method named `__add__`, you can use the **+** operator on `Time` objects.
+
+---
+      </textarea>
+    <script src="assets/remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
