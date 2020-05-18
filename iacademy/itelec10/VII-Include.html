@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VII. PHP Include Files</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+# PHP Include Files
+
+---
+
+The `include` (or `require`) statement takes all the text/code/markup that exists in the specified file and copies it into the file that uses the include statement.
+
+Including files is very useful when you want to include the same PHP, HTML, or text on multiple pages of a website.
+
+---
+
+#### The include and require statements are identical, except upon failure:
+
+ - ** `require` ** will produce a fatal error (E_COMPILE_ERROR) and stop the script
+ - ** `include` ** will only produce a warning (E_WARNING) and the script will continue
+
+---
+
+### Syntax
+
+```PHP
+include 'filename';
+
+or
+
+require 'filename';
+```
+---
+
+# PHP include Examples
+
+#### Example 1
+
+Assume we have a standard footer file called "footer.php", that looks like this:
+
+```PHP
+<?php
+echo "<p>Copyright &copy; 1999-" . date("Y") . " W3Schools.com</p>";
+?>
+```
+
+To include the footer file in a page, use the include statement:
+
+
+```PHP
+<html>
+    <body>
+
+        <h1>Welcome to my home page!</h1>
+        <p>Some text.</p>
+        <p>Some more text.</p>
+        <?php include 'footer.php';?>
+
+    </body>
+</html>
+```
+
+---
+#### Example 2
+Assume we have a standard menu file called "menu.php":
+
+```PHP
+<?php
+echo '<a href="/default.asp">Home</a> -
+    <a href="/html/default.asp">HTML Tutorial</a> -
+    <a href="/css/default.asp">CSS Tutorial</a> -
+    <a href="/js/default.asp">JavaScript Tutorial</a> -
+    <a href="default.asp">PHP Tutorial</a>';
+?>
+```
+
+All pages in the Web site should use this menu file. Here is how it can be done (we are using a <div> element so that the menu easily can be styled with CSS later)
+
+```php
+<html>
+    <body>
+
+        <div class="menu">
+            <?php include 'menu.php';?>
+        </div>
+
+        <h1>Welcome to my home page!</h1>
+        <p>Some text.</p>
+        <p>Some more text.</p>
+
+    </body>
+</html>
+```
+---
+
+### Example 3
+Assume we have a file called "vars.php", with some variables defined:
+
+```php
+<?php
+$color='red';
+$car='BMW';
+?>
+```
+
+Then, if we include the "vars.php" file, the variables can be used in the calling file:
+
+```PHP
+<html>
+    <body>
+        <h1>Welcome to my home page!</h1>
+        <?php include 'vars.php';
+        echo "I have a $color $car.";
+        ?>
+    </body>
+</html>
+```
+
+---
+
+# PHP include vs. require
+
+The `require` statement is also used to include a file into the PHP code.
+
+When a file is included with the `include` statement and PHP cannot find it, the script will continue to execute:
+
+----
+
+Note:
+
+ - Use require when the file is required by the application.
+ - Use include when the file is not required and application should continue when file is not found.
+
+
+
+
+---
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
