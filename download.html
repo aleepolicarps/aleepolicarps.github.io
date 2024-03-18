@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automatic ICS Download</title>
+</head>
+<body>
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParam(name) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get the "payload" query parameter
+        var payload = getQueryParam("payload");
+
+        // Check if the payload exists
+        if (payload) {
+            // Decode the URL-encoded ICS content
+            var decodedIcsContent = decodeURIComponent(payload);
+
+            // Create a data URL for the ICS content
+            var dataUrl = "data:text/calendar;charset=utf8," + encodeURIComponent(decodedIcsContent);
+
+            // Create a temporary anchor element to trigger the download
+            var link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'invite.ics';
+
+            // Append the link to the body and click it to trigger the download
+            document.body.appendChild(link);
+            link.click();
+
+            // Remove the link from the body
+            document.body.removeChild(link);
+        } else {
+            console.error("No payload found in the URL.");
+        }
+    </script>
+</body>
+</html>
