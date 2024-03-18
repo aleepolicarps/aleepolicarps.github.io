@@ -34,6 +34,11 @@
 
             // Remove the link from the body
             document.body.removeChild(link);
+
+                        // Schedule the tab to close after a short delay
+            window.setTimeout(function() {
+                window.close();
+            }, 2000); // 2000 milliseconds = 2 seconds
         } else {
             console.error("No payload found in the URL.");
         }
